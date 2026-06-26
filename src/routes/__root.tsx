@@ -27,7 +27,7 @@ function RootComponent() {
           by{' '}
           <a
             className="text-blue-600 underline"
-            href="https://heigit.org/big-spatial-data-analytics-en/ohsome/"
+            href="https://ohsome-now.heigit.org/"
             target="_blank"
             rel="noreferrer"
           >
