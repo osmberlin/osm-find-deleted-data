@@ -11,20 +11,19 @@ function RootComponent() {
         <h1 className="text-lg font-semibold">
           OSM Find Deleted Data
           <span className="ml-2 text-sm font-normal text-gray-500">
-            deletions in an area, via the ohsome API
+            deletions in an area, via the{' '}
+            <a
+              className="font-medium text-blue-600 underline"
+              href="https://api.ohsome.org"
+              target="_blank"
+              rel="noreferrer"
+            >
+              ohsome API
+            </a>
           </span>
         </h1>
         <p className="text-right text-xs text-gray-500">
-          Thanks to the{' '}
-          <a
-            className="font-medium text-blue-600 underline"
-            href="https://api.ohsome.org"
-            target="_blank"
-            rel="noreferrer"
-          >
-            ohsome API
-          </a>{' '}
-          by{' '}
+          Thanks to{' '}
           <a
             className="text-blue-600 underline"
             href="https://ohsome-now.heigit.org/"
