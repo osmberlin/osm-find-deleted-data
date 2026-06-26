@@ -25,6 +25,19 @@ describe('OSM urls', () => {
   it('builds a history url', () => {
     expect(osmHistoryUrl(ref)).toBe('https://www.openstreetmap.org/node/967694075/history')
   })
+  it('appends a #map hash when coords are known (deleted objects have no location on OSM)', () => {
+    expect(osmHistoryUrl(ref, { lat: 52.764051, lon: 13.271388 })).toBe(
+      'https://www.openstreetmap.org/node/967694075/history#map=18/52.764051/13.271388',
+    )
+  })
+  it('omits the hash when coords are missing or invalid', () => {
+    expect(osmHistoryUrl(ref, undefined)).toBe(
+      'https://www.openstreetmap.org/node/967694075/history',
+    )
+    expect(osmHistoryUrl(ref, { lat: NaN, lon: 13 })).toBe(
+      'https://www.openstreetmap.org/node/967694075/history',
+    )
+  })
   it('builds an object url', () => {
     expect(osmObjectUrl(ref)).toBe('https://www.openstreetmap.org/node/967694075')
   })

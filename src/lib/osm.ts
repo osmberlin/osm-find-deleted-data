@@ -22,9 +22,22 @@ export function parseOsmId(value: string | undefined | null): OsmRef | null {
 
 const BASE = 'https://www.openstreetmap.org'
 
-/** Link to the full edit history of an object (creation → … → deletion). */
-export function osmHistoryUrl(ref: OsmRef): string {
-  return `${BASE}/${ref.type}/${ref.id}/history`
+/** Default zoom for the map hash on a history link. */
+const HISTORY_ZOOM = 18
+
+/**
+ * Link to the full edit history of an object (creation → … → deletion).
+ *
+ * For a deleted object the location no longer exists on OSM, so the map won't
+ * center on it. When we know the (last-known) coordinates, append a `#map=`
+ * hash so OSM still pans to where the object used to be.
+ */
+export function osmHistoryUrl(ref: OsmRef, coords?: { lat: number; lon: number }): string {
+  const base = `${BASE}/${ref.type}/${ref.id}/history`
+  if (!coords || !Number.isFinite(coords.lat) || !Number.isFinite(coords.lon)) return base
+  const lat = coords.lat.toFixed(6)
+  const lon = coords.lon.toFixed(6)
+  return `${base}#map=${HISTORY_ZOOM}/${lat}/${lon}`
 }
 
 /** Link to the object page itself. */

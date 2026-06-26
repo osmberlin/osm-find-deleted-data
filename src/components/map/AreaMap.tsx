@@ -22,6 +22,7 @@ import {
   moveCorner,
 } from '../../lib/bbox'
 import type { Deletion } from '../../lib/ohsome'
+import { osmHistoryUrl } from '../../lib/osm'
 
 // OpenFreeMap basemap (Maptiler is the documented fallback if this is ever down).
 const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty'
@@ -195,7 +196,12 @@ export function AreaMap({ search, deletions, onBboxChange, onCameraChange }: Pro
               {selected.ref && (
                 <a
                   className="text-blue-600 underline"
-                  href={`https://www.openstreetmap.org/${selected.ref.type}/${selected.ref.id}/history`}
+                  href={osmHistoryUrl(
+                    selected.ref,
+                    selected.lat !== undefined && selected.lon !== undefined
+                      ? { lat: selected.lat, lon: selected.lon }
+                      : undefined,
+                  )}
                   target="_blank"
                   rel="noreferrer"
                 >

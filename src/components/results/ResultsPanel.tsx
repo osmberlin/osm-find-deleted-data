@@ -91,7 +91,12 @@ export function ResultsPanel({ status, isFetching, hasApplied, errorMessage, del
                   {d.ref ? (
                     <a
                       className="font-mono text-blue-600 underline"
-                      href={osmHistoryUrl(d.ref)}
+                      href={osmHistoryUrl(
+                        d.ref,
+                        d.lat !== undefined && d.lon !== undefined
+                          ? { lat: d.lat, lon: d.lon }
+                          : undefined,
+                      )}
                       target="_blank"
                       rel="noreferrer"
                     >
