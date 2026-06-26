@@ -27,8 +27,20 @@ export function normalizeBbox(b: Bbox): Bbox {
   return [Math.min(a, d), Math.min(c, e), Math.max(a, d), Math.max(c, e)]
 }
 
+/**
+ * Max decimal places we keep for any coordinate. 6 dp ≈ 0.11 m at the equator —
+ * far finer than OSM data — and keeps URLs short. Applied when a drag/draw
+ * produces full-precision floats.
+ */
+export const COORD_PRECISION = 6
+
+/** Round every coordinate of a bbox to COORD_PRECISION decimals. */
+export function roundBbox(b: Bbox, precision = COORD_PRECISION): Bbox {
+  return b.map((n) => Number(n.toFixed(precision))) as Bbox
+}
+
 /** ohsome `bboxes` value: comma-joined, fixed precision to keep URLs short and stable. */
-export function bboxToOhsomeParam(b: Bbox, precision = 5): string {
+export function bboxToOhsomeParam(b: Bbox, precision = COORD_PRECISION): string {
   return b.map((n) => Number(n.toFixed(precision))).join(',')
 }
 

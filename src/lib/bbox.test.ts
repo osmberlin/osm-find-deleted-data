@@ -3,6 +3,7 @@ import {
   type Bbox,
   isValidBbox,
   normalizeBbox,
+  roundBbox,
   bboxToOhsomeParam,
   parseBbox,
   bboxCorners,
@@ -37,14 +38,22 @@ describe('normalizeBbox', () => {
   })
 })
 
+describe('roundBbox', () => {
+  it('clamps every coordinate to 6 decimals (map drags produce long floats)', () => {
+    expect(roundBbox([13.41150001, 52.48449999, 13.2713884, 52.7640512])).toEqual([
+      13.4115, 52.4845, 13.271388, 52.764051,
+    ])
+  })
+})
+
 describe('bboxToOhsomeParam / parseBbox', () => {
   it('round-trips', () => {
     const param = bboxToOhsomeParam(hasenheide)
     expect(param).toBe('13.4115,52.4845,13.428,52.4905')
     expect(parseBbox(param)).toEqual([13.4115, 52.4845, 13.428, 52.4905])
   })
-  it('clamps precision', () => {
-    expect(bboxToOhsomeParam([1.123456789, 2, 3, 4])).toBe('1.12346,2,3,4')
+  it('clamps precision to 6 decimals', () => {
+    expect(bboxToOhsomeParam([1.123456789, 2, 3, 4])).toBe('1.123457,2,3,4')
   })
   it('returns null for malformed input', () => {
     expect(parseBbox('')).toBeNull()

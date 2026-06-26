@@ -17,6 +17,7 @@ import {
   type Corner,
   isValidBbox,
   normalizeBbox,
+  roundBbox,
   bboxToPolygon,
   bboxCorners,
   moveCorner,
@@ -91,7 +92,7 @@ export function AreaMap({ search, deletions, onBboxChange, onCameraChange }: Pro
   }
 
   const finishInteraction = () => {
-    if (draftBbox) onBboxChange(normalizeBbox(draftBbox))
+    if (draftBbox) onBboxChange(roundBbox(normalizeBbox(draftBbox)))
     cornerRef.current = null
     drawStartRef.current = null
     baseRef.current = null
