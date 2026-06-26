@@ -267,7 +267,7 @@ function GeneratedUrl({ url }: { url: string }) {
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-medium text-gray-600">Generated ohsome request</span>
+        <span className="text-xs font-medium text-gray-600">FYI: The Generated ohsome API request</span>
         <button
           type="button"
           className="text-xs text-blue-600 underline"

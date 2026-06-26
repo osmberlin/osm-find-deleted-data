@@ -64,7 +64,7 @@ test('a complete shared link auto-runs and lists deletions with history links', 
   await expect(page.getByLabel('maxLat')).toHaveValue('52.4905')
 
   // The generated ohsome request is shown for transparency.
-  await expect(page.getByText('Generated ohsome request')).toBeVisible()
+  await expect(page.getByText('FYI: The Generated ohsome API request')).toBeVisible()
 })
 
 test('hovering a result row highlights it (table <-> map link)', async ({ page }) => {
