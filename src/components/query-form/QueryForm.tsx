@@ -94,14 +94,13 @@ export function QueryForm({
         </span>
       </label>
 
-      {/* Step 2: Dates */}
-      <div className="flex items-center gap-2 text-sm font-medium">
-        <StepBadge n={2} />
-        Time range
-      </div>
-      <div className="-mt-2 grid grid-cols-2 gap-3">
+      {/* Step 2: Dates (the badge in front of "From" covers the whole range) */}
+      <div className="grid grid-cols-2 gap-3">
         <label className="flex flex-col gap-1">
-          <span className="text-sm font-medium">From</span>
+          <span className="flex items-center gap-2 text-sm font-medium">
+            <StepBadge n={2} />
+            From
+          </span>
           <input
             type="date"
             className="rounded border-gray-300 text-sm shadow-sm"
