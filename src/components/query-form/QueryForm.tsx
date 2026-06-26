@@ -153,10 +153,26 @@ export function QueryForm({
           <StepBadge n={3} />
           Bounding box
         </legend>
-        <p className="text-xs text-gray-500">
-          Set the area to search — draw it on the map, or open the coordinates below. Both stay in sync.
-        </p>
-        {drawing ? (
+        <div className="flex items-start justify-between gap-3">
+          <p className="text-xs text-gray-500">
+            Specify the area to search by drawing on the map (or provide coords).
+          </p>
+          {!drawing && bbox !== undefined && (
+            // An area is set: tuck "Redraw" next to the hint; click clears it and
+            // jumps straight into drawing a new one.
+            <button
+              type="button"
+              onClick={() => {
+                onPatch({ bbox: undefined })
+                onToggleDraw()
+              }}
+              className="shrink-0 rounded border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+            >
+              Redraw
+            </button>
+          )}
+        </div>
+        {drawing && (
           <button
             type="button"
             onClick={onToggleDraw}
@@ -164,19 +180,8 @@ export function QueryForm({
           >
             ⓘ Click and drag in the map
           </button>
-        ) : bbox !== undefined ? (
-          // An area is set: clear it and jump straight into drawing a new one.
-          <button
-            type="button"
-            onClick={() => {
-              onPatch({ bbox: undefined })
-              onToggleDraw()
-            }}
-            className="self-start rounded border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
-          >
-            Redraw
-          </button>
-        ) : (
+        )}
+        {!drawing && bbox === undefined && (
           <button
             type="button"
             onClick={onToggleDraw}
