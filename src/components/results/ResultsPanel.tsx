@@ -178,11 +178,11 @@ function summarizeTags(tags: Record<string, string>): string {
   return entries.length > 3 ? `${shown}, +${entries.length - 3}` : shown
 }
 
-/** Step-4 heading shown above every result state. */
+/** Step-5 heading shown above every result state. */
 function Heading({ children }: { children: React.ReactNode }) {
   return (
     <h2 className="flex items-center gap-2 text-sm font-semibold">
-      <StepBadge n={4} />
+      <StepBadge n={5} />
       {children}
     </h2>
   )

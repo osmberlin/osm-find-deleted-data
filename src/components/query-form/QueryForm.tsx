@@ -94,8 +94,12 @@ export function QueryForm({
         </span>
       </label>
 
-      {/* Dates */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* Step 2: Dates */}
+      <div className="flex items-center gap-2 text-sm font-medium">
+        <StepBadge n={2} />
+        Time range
+      </div>
+      <div className="-mt-2 grid grid-cols-2 gap-3">
         <label className="flex flex-col gap-1">
           <span className="text-sm font-medium">From</span>
           <input
@@ -144,10 +148,10 @@ export function QueryForm({
         </p>
       )}
 
-      {/* Step 2: Bbox */}
+      {/* Step 3: Bbox */}
       <fieldset className="flex flex-col gap-2">
         <legend className="flex items-center gap-2 text-sm font-medium">
-          <StepBadge n={2} />
+          <StepBadge n={3} />
           Bounding box
         </legend>
         <p className="text-xs text-gray-500">
@@ -162,10 +166,13 @@ export function QueryForm({
             ⓘ Click and drag in the map
           </button>
         ) : bbox !== undefined ? (
-          // An area is set: offer to clear it, nudging the user to draw a new one.
+          // An area is set: clear it and jump straight into drawing a new one.
           <button
             type="button"
-            onClick={() => onPatch({ bbox: undefined })}
+            onClick={() => {
+              onPatch({ bbox: undefined })
+              onToggleDraw()
+            }}
             className="self-start rounded border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
           >
             Redraw
@@ -213,13 +220,13 @@ export function QueryForm({
         )}
       </fieldset>
 
-      {/* Step 3: Search */}
+      {/* Step 4: Search */}
       <button
         type="submit"
         disabled={!canRun || isRunning}
         className="flex items-center justify-center gap-2 rounded bg-orange-600 px-4 py-2 text-sm font-medium text-white shadow-sm enabled:hover:bg-orange-700 disabled:cursor-not-allowed disabled:bg-gray-300"
       >
-        <StepBadge n={3} className="bg-white text-orange-600" />
+        <StepBadge n={4} className="bg-white text-orange-600" />
         {isRunning ? 'Finding deletions…' : 'Find deletions'}
       </button>
 

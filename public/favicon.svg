@@ -55,8 +55,9 @@
   <g id="Grenzabgleich">
     <!-- Lens content: brand-orange disk (was emerald green) -->
     <circle id="Lupe_Glas_dunkel" cx="198.13" cy="114.13" r="88.79" style="fill:#ea580c;stroke-width:0"/>
-    <!-- Material "restore_from_trash" icon, centered in the lens -->
-    <g transform="translate(198.13 114.13) scale(0.19) translate(-420 460)">
+    <!-- Material "restore_from_trash" icon, centered in the lens.
+         Sized to the reference proportion: ~215x275 within a 520 inner circle. -->
+    <g transform="translate(198.13 114.13) scale(0.138) translate(-420 460)">
       <path fill="#fff" d="M440-320h80v-166l64 62 56-56-160-160-160 160 56 56 64-62v166ZM280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"/>
     </g>
   </g>
