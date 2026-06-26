@@ -1,0 +1,272 @@
+import 'maplibre-gl/dist/maplibre-gl.css'
+import { useRef, useState } from 'react'
+import Map, {
+  Source,
+  Layer,
+  Popup,
+  NavigationControl,
+  AttributionControl,
+  type MapLayerMouseEvent,
+  type ViewStateChangeEvent,
+  type MapRef,
+} from 'react-map-gl/maplibre'
+import type { FeatureCollection, Point, Polygon, Feature } from 'geojson'
+import type { AppSearch } from '../../search-schema'
+import {
+  type Bbox,
+  type Corner,
+  isValidBbox,
+  normalizeBbox,
+  bboxToPolygon,
+  bboxCorners,
+  moveCorner,
+} from '../../lib/bbox'
+import type { Deletion } from '../../lib/ohsome'
+
+// OpenFreeMap basemap (Maptiler is the documented fallback if this is ever down).
+const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty'
+const HANDLE_LAYER = 'bbox-handles'
+const DELETION_LAYER = 'deletions'
+
+interface Props {
+  search: AppSearch
+  deletions: Deletion[]
+  onBboxChange: (bbox: Bbox) => void
+  onCameraChange: (cam: { z: number; lat: number; lng: number }) => void
+}
+
+const round = (n: number, dp: number) => Number(n.toFixed(dp))
+
+export function AreaMap({ search, deletions, onBboxChange, onCameraChange }: Props) {
+  const committedBbox =
+    search.bbox && isValidBbox(search.bbox as Bbox) ? (search.bbox as Bbox) : null
+
+  // Draft shown live while drawing/dragging; committed to the URL on mouse-up.
+  const [draftBbox, setDraftBbox] = useState<Bbox | null>(null)
+  const [drawing, setDrawing] = useState(false)
+  const [selected, setSelected] = useState<Deletion | null>(null)
+
+  const cornerRef = useRef<Corner | null>(null)
+  const drawStartRef = useRef<[number, number] | null>(null)
+  const baseRef = useRef<Bbox | null>(null)
+  const mapRef = useRef<MapRef | null>(null)
+
+  const effectiveBbox = draftBbox ?? committedBbox
+
+  const [initialView] = useState(() => initialViewState(search))
+
+  const setPan = (enabled: boolean) => {
+    const map = mapRef.current?.getMap()
+    if (!map) return
+    if (enabled) map.dragPan.enable()
+    else map.dragPan.disable()
+  }
+
+  const onMouseDown = (e: MapLayerMouseEvent) => {
+    const handle = e.features?.find((f) => f.layer.id === HANDLE_LAYER)
+    if (handle) {
+      cornerRef.current = handle.properties?.corner as Corner
+      baseRef.current = committedBbox
+      setPan(false)
+      e.preventDefault()
+      return
+    }
+    if (drawing) {
+      drawStartRef.current = [e.lngLat.lng, e.lngLat.lat]
+      setPan(false)
+      e.preventDefault()
+    }
+  }
+
+  const onMouseMove = (e: MapLayerMouseEvent) => {
+    if (cornerRef.current && baseRef.current) {
+      setDraftBbox(moveCorner(baseRef.current, cornerRef.current, e.lngLat.lng, e.lngLat.lat))
+      return
+    }
+    if (drawing && drawStartRef.current) {
+      const [lng0, lat0] = drawStartRef.current
+      setDraftBbox(normalizeBbox([lng0, lat0, e.lngLat.lng, e.lngLat.lat]))
+    }
+  }
+
+  const finishInteraction = () => {
+    if (draftBbox) onBboxChange(normalizeBbox(draftBbox))
+    cornerRef.current = null
+    drawStartRef.current = null
+    baseRef.current = null
+    setDraftBbox(null)
+    setDrawing(false)
+    setPan(true)
+  }
+
+  const onMouseUp = () => {
+    if (cornerRef.current || drawStartRef.current) finishInteraction()
+  }
+
+  const onClick = (e: MapLayerMouseEvent) => {
+    const hit = e.features?.find((f) => f.layer.id === DELETION_LAYER)
+    if (hit) {
+      const osmId = hit.properties?.osmId as string | undefined
+      setSelected(deletions.find((d) => d.osmId === osmId) ?? null)
+    }
+  }
+
+  const interactiveLayerIds = [HANDLE_LAYER, DELETION_LAYER]
+
+  return (
+    <div className="absolute inset-0">
+      <Map
+        ref={mapRef}
+        initialViewState={initialView}
+        mapStyle={MAP_STYLE}
+        attributionControl={false}
+        interactiveLayerIds={interactiveLayerIds}
+        cursor={drawing ? 'crosshair' : undefined}
+        onMoveEnd={(e: ViewStateChangeEvent) =>
+          onCameraChange({
+            z: round(e.viewState.zoom, 2),
+            lat: round(e.viewState.latitude, 5),
+            lng: round(e.viewState.longitude, 5),
+          })
+        }
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onClick={onClick}
+      >
+        <NavigationControl position="top-right" />
+        <AttributionControl position="bottom-right" compact />
+
+        {effectiveBbox && isValidBbox(normalizeBbox(effectiveBbox)) && (
+          <Source id="bbox" type="geojson" data={polygonFc(bboxToPolygon(effectiveBbox))}>
+            <Layer
+              id="bbox-fill"
+              type="fill"
+              paint={{ 'fill-color': '#2563eb', 'fill-opacity': 0.08 }}
+            />
+            <Layer
+              id="bbox-line"
+              type="line"
+              paint={{ 'line-color': '#2563eb', 'line-width': 2 }}
+            />
+          </Source>
+        )}
+
+        {effectiveBbox && (
+          <Source id="handles" type="geojson" data={handlesFc(effectiveBbox)}>
+            <Layer
+              id={HANDLE_LAYER}
+              type="circle"
+              paint={{
+                'circle-radius': 6,
+                'circle-color': '#ffffff',
+                'circle-stroke-color': '#2563eb',
+                'circle-stroke-width': 2,
+              }}
+            />
+          </Source>
+        )}
+
+        {deletions.length > 0 && (
+          <Source id="deletions" type="geojson" data={deletionsFc(deletions)}>
+            <Layer
+              id={DELETION_LAYER}
+              type="circle"
+              paint={{
+                'circle-radius': 6,
+                'circle-color': '#dc2626',
+                'circle-stroke-color': '#ffffff',
+                'circle-stroke-width': 1.5,
+              }}
+            />
+          </Source>
+        )}
+
+        {selected && selected.lon !== undefined && selected.lat !== undefined && (
+          <Popup
+            longitude={selected.lon}
+            latitude={selected.lat}
+            anchor="bottom"
+            onClose={() => setSelected(null)}
+            closeOnClick={false}
+          >
+            <div className="text-xs">
+              <div className="font-mono">{selected.osmId}</div>
+              {selected.ref && (
+                <a
+                  className="text-blue-600 underline"
+                  href={`https://www.openstreetmap.org/${selected.ref.type}/${selected.ref.id}/history`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  view history
+                </a>
+              )}
+            </div>
+          </Popup>
+        )}
+      </Map>
+
+      {/* Draw control overlay */}
+      <div className="absolute top-2 left-2 flex flex-col gap-1">
+        <button
+          type="button"
+          onClick={() => {
+            setDrawing((d) => !d)
+            setDraftBbox(null)
+          }}
+          className={`rounded px-3 py-1.5 text-sm font-medium shadow ${
+            drawing ? 'bg-blue-600 text-white' : 'bg-white text-gray-800 hover:bg-gray-50'
+          }`}
+        >
+          {drawing ? 'Click-drag to draw…' : committedBbox ? 'Redraw area' : 'Draw area'}
+        </button>
+        {!committedBbox && !drawing && (
+          <span className="rounded bg-white/90 px-2 py-1 text-xs text-gray-600 shadow">
+            Draw a box, or type coordinates on the left.
+          </span>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function initialViewState(search: AppSearch) {
+  if (search.z !== undefined && search.lat !== undefined && search.lng !== undefined) {
+    return { zoom: search.z, latitude: search.lat, longitude: search.lng }
+  }
+  const b = search.bbox as Bbox | undefined
+  if (b && isValidBbox(b)) {
+    return { zoom: 14, latitude: (b[1] + b[3]) / 2, longitude: (b[0] + b[2]) / 2 }
+  }
+  // Default: a wide view of Germany so the user can navigate to their area.
+  return { zoom: 5, latitude: 51.2, longitude: 10.4 }
+}
+
+function polygonFc(feature: Feature<Polygon>): FeatureCollection<Polygon> {
+  return { type: 'FeatureCollection', features: [feature] }
+}
+
+function handlesFc(bbox: Bbox): FeatureCollection<Point> {
+  return {
+    type: 'FeatureCollection',
+    features: bboxCorners(bbox).map((c) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [c.lon, c.lat] },
+      properties: { corner: c.corner },
+    })),
+  }
+}
+
+function deletionsFc(deletions: Deletion[]): FeatureCollection<Point> {
+  return {
+    type: 'FeatureCollection',
+    features: deletions
+      .filter((d) => d.lon !== undefined && d.lat !== undefined)
+      .map((d) => ({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [d.lon!, d.lat!] },
+        properties: { osmId: d.osmId },
+      })),
+  }
+}
