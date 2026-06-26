@@ -169,12 +169,12 @@ export function AreaMap({
             <Layer
               id="bbox-fill"
               type="fill"
-              paint={{ 'fill-color': '#2563eb', 'fill-opacity': 0.08 }}
+              paint={{ 'fill-color': '#ea580c', 'fill-opacity': 0.08 }}
             />
             <Layer
               id="bbox-line"
               type="line"
-              paint={{ 'line-color': '#2563eb', 'line-width': 2 }}
+              paint={{ 'line-color': '#ea580c', 'line-width': 2 }}
             />
           </Source>
         )}
@@ -187,7 +187,7 @@ export function AreaMap({
               paint={{
                 'circle-radius': 6,
                 'circle-color': '#ffffff',
-                'circle-stroke-color': '#2563eb',
+                'circle-stroke-color': '#ea580c',
                 'circle-stroke-width': 2,
               }}
             />
@@ -284,7 +284,7 @@ export function AreaMap({
 
       {/* Draw-mode hint (the trigger lives in the form's step 2) */}
       {drawing && (
-        <div className="pointer-events-none absolute top-2 left-1/2 -translate-x-1/2 rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white shadow">
+        <div className="pointer-events-none absolute top-2 left-1/2 -translate-x-1/2 rounded bg-orange-600 px-3 py-1.5 text-sm font-medium text-white shadow">
           Click and drag to draw the area
         </div>
       )}

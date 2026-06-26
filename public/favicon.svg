@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <title>OSM Find Deleted Data</title>
+  <!-- Magnifying-glass handle (drawn first so it tucks under the lens) -->
+  <path d="M60 60 L87 87" stroke="#1e293b" stroke-width="11" stroke-linecap="round" fill="none" />
+
+  <!-- Lens glass -->
+  <circle cx="42" cy="42" r="30" fill="#fff7ed" />
+
+  <!-- Lens rim = Material "history" circular arrow (turn-back-time look),
+       without the clock hand. Mapped from the 0 -960 960 960 icon space. -->
+  <g transform="translate(-3.333 87.333) scale(0.09444)" fill="#1e293b">
+    <path d="M480-120q-138 0-240.5-91.5T122-440h82q14 104 92.5 172T480-200q117 0 198.5-81.5T760-480q0-117-81.5-198.5T480-760q-69 0-129 32t-101 88h110v80H120v-240h80v94q51-64 124.5-99T480-840q75 0 140.5 28.5t114 77q48.5 48.5 77 114T840-480q0 75-28.5 140.5t-77 114q-48.5 48.5-114 77T480-120Z" />
+  </g>
+
+  <!-- Center content = Material "restore_from_trash" in the brand orange -->
+  <g transform="translate(14.28 73.36) scale(0.066)" fill="#ea580c">
+    <path d="M440-320h80v-166l64 62 56-56-160-160-160 160 56 56 64-62v166ZM280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z" />
+  </g>
+</svg>

@@ -73,7 +73,7 @@ test('hovering a result row highlights it (table <-> map link)', async ({ page }
 
   const firstRow = page.locator('tbody tr').first()
   await firstRow.hover()
-  await expect(firstRow).toHaveClass(/bg-amber-100/)
+  await expect(firstRow).toHaveClass(/bg-amber-200/)
 })
 
 test('typing a coordinate updates the URL (input → map sync)', async ({ page }) => {

@@ -111,7 +111,7 @@ export function ResultsPanel({
               <tr
                 key={`${d.osmId}-${i}`}
                 className={`border-t border-gray-100 align-top ${
-                  active ? 'bg-amber-100' : 'hover:bg-blue-100/60'
+                  active ? 'bg-amber-200' : 'hover:bg-orange-100/70'
                 } ${d.lon !== undefined ? 'cursor-pointer' : ''}`}
                 onMouseEnter={() => onHover(d.osmId)}
                 onMouseLeave={() => onHover(null)}
@@ -191,7 +191,7 @@ function Heading({ children }: { children: React.ReactNode }) {
 /** Highlighted card that frames the result area so it draws the eye. */
 function Box({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 shadow-sm ring-1 ring-blue-100">
+    <div className="rounded-lg border border-orange-200 bg-orange-50 p-3 shadow-sm ring-1 ring-orange-100">
       {children}
     </div>
   )

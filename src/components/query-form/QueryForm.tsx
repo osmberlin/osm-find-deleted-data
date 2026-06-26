@@ -158,8 +158,8 @@ export function QueryForm({
           onClick={onToggleDraw}
           className={`self-start rounded px-3 py-1.5 text-sm font-medium shadow-sm ${
             drawing
-              ? 'bg-blue-600 text-white'
-              : 'border border-blue-600 text-blue-700 hover:bg-blue-50'
+              ? 'bg-orange-600 text-white'
+              : 'border border-orange-600 text-orange-700 hover:bg-orange-50'
           }`}
         >
           {drawing ? 'ⓘ Click and drag in the map' : 'Draw area'}
@@ -202,9 +202,9 @@ export function QueryForm({
       <button
         type="submit"
         disabled={!canRun || isRunning}
-        className="flex items-center justify-center gap-2 rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm enabled:hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-300"
+        className="flex items-center justify-center gap-2 rounded bg-orange-600 px-4 py-2 text-sm font-medium text-white shadow-sm enabled:hover:bg-orange-700 disabled:cursor-not-allowed disabled:bg-gray-300"
       >
-        <StepBadge n={3} className="bg-white text-blue-600" />
+        <StepBadge n={3} className="bg-white text-orange-600" />
         {isRunning ? 'Finding deletions…' : 'Find deletions'}
       </button>
 

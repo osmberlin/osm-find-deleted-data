@@ -8,9 +8,16 @@ function RootComponent() {
   return (
     <div className="flex h-full flex-col bg-gray-50 text-gray-900">
       <header className="flex items-center justify-between gap-4 border-b border-gray-200 bg-white px-4 py-3">
-        <h1 className="text-lg font-semibold">
+        <h1 className="flex items-center gap-2 text-lg font-semibold">
+          <img
+            src={`${import.meta.env.BASE_URL}favicon.svg`}
+            alt=""
+            className="h-7 w-7"
+            width={28}
+            height={28}
+          />
           OSM Find Deleted Data
-          <span className="ml-2 text-sm font-normal text-gray-500">
+          <span className="ml-1 text-sm font-normal text-gray-500">
             deletions in an area, via the{' '}
             <a
               className="font-medium text-blue-600 underline"
