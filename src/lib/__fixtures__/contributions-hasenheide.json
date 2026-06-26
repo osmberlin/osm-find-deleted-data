@@ -1,0 +1,1699 @@
+{
+  "attribution" : {
+    "url" : "https://ohsome.org/copyrights",
+    "text" : "© OpenStreetMap contributors"
+  },
+  "apiVersion" : "1.10.4",
+  "type" : "FeatureCollection",
+  "features" : [{
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4175411,
+        52.48506
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 89852551,
+      "@contributionChangesetId" : 89852551,
+      "@osmId" : "node/967694033",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2020-08-24T10:55:25Z",
+      "@version" : 2,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4175411,
+        52.48506
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105133338,
+      "@contributionChangesetId" : 105133338,
+      "@osmId" : "node/967694033",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2021-05-22T13:35:33Z",
+      "@version" : 3,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "direction" : "285",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : null,
+    "properties" : {
+      "@changesetId" : 89852551,
+      "@contributionChangesetId" : 89852551,
+      "@deletion" : true,
+      "@osmId" : "node/967694044",
+      "@osmType" : "node",
+      "@timestamp" : "2020-08-24T10:55:25Z",
+      "@version" : 2
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : null,
+    "properties" : {
+      "@changesetId" : 107646074,
+      "@contributionChangesetId" : 107646074,
+      "@deletion" : true,
+      "@osmId" : "node/967694051",
+      "@osmType" : "node",
+      "@timestamp" : "2021-07-08T15:22:37Z",
+      "@version" : 2,
+      "check_date" : "2021-07-08",
+      "removed:amenity" : "bench"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4173046,
+        52.4845019
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 89852551,
+      "@contributionChangesetId" : 89852551,
+      "@osmId" : "node/967694059",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2020-08-24T10:55:25Z",
+      "@version" : 2,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4173046,
+        52.4845019
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105133338,
+      "@contributionChangesetId" : 105133338,
+      "@osmId" : "node/967694059",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2021-05-22T13:35:33Z",
+      "@version" : 3,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "direction" : "285",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4177378,
+        52.4854456
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 89852551,
+      "@contributionChangesetId" : 89852551,
+      "@osmId" : "node/967694070",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2020-08-24T10:55:25Z",
+      "@version" : 2,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4177378,
+        52.4854456
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105133338,
+      "@contributionChangesetId" : 105133338,
+      "@osmId" : "node/967694070",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2021-05-22T13:35:33Z",
+      "@version" : 3,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "check_date" : "2021-05-16",
+      "direction" : "290",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : null,
+    "properties" : {
+      "@changesetId" : 89852551,
+      "@contributionChangesetId" : 89852551,
+      "@deletion" : true,
+      "@osmId" : "node/967694075",
+      "@osmType" : "node",
+      "@timestamp" : "2020-08-24T10:55:25Z",
+      "@version" : 2
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4151364,
+        52.4853386
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 101721477,
+      "@contributionChangesetId" : 101721477,
+      "@geometryChange" : true,
+      "@osmId" : "node/967694086",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2021-03-25T13:00:48Z",
+      "@version" : 2,
+      "amenity" : "bench",
+      "backrest" : "no",
+      "direction" : "139",
+      "material" : "granite"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4151364,
+        52.4853386
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 107646074,
+      "@contributionChangesetId" : 107646074,
+      "@osmId" : "node/967694086",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2021-07-08T15:22:37Z",
+      "@version" : 3,
+      "amenity" : "bench",
+      "backrest" : "no",
+      "check_date" : "2021-07-08",
+      "direction" : "139",
+      "material" : "granite"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4174051,
+        52.4847306
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 89852551,
+      "@contributionChangesetId" : 89852551,
+      "@osmId" : "node/967694090",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2020-08-24T10:55:25Z",
+      "@version" : 2,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4174051,
+        52.4847306
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105133338,
+      "@contributionChangesetId" : 105133338,
+      "@osmId" : "node/967694090",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2021-05-22T13:35:33Z",
+      "@version" : 3,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "direction" : "285",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4178131,
+        52.4856104
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 89852551,
+      "@contributionChangesetId" : 89852551,
+      "@osmId" : "node/967694100",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2020-08-24T10:55:25Z",
+      "@version" : 2,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4178131,
+        52.4856104
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105133338,
+      "@contributionChangesetId" : 105133338,
+      "@osmId" : "node/967694100",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2021-05-22T13:35:33Z",
+      "@version" : 3,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "check_date" : "2021-05-16",
+      "direction" : "290",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.416628,
+        52.4863834
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 118868538,
+      "@contributionChangesetId" : 118868538,
+      "@osmId" : "node/974862689",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2022-03-24T14:53:58Z",
+      "@version" : 2,
+      "amenity" : "bench",
+      "backrest" : "yes"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4166386,
+        52.4863755
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 125053336,
+      "@contributionChangesetId" : 125053336,
+      "@geometryChange" : true,
+      "@osmId" : "node/974862689",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2022-08-18T09:53:48Z",
+      "@version" : 3,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "colour" : "red",
+      "direction" : "243"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4121006,
+        52.4845675
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 89852551,
+      "@contributionChangesetId" : 89852551,
+      "@geometryChange" : true,
+      "@osmId" : "node/1966383864",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2020-08-24T10:55:25Z",
+      "@version" : 3,
+      "amenity" : "bench",
+      "backrest" : "no",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4177635,
+        52.4868236
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105475117,
+      "@contributionChangesetId" : 105475117,
+      "@geometryChange" : true,
+      "@osmId" : "node/2099738866",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2021-05-28T08:33:15Z",
+      "@version" : 2,
+      "amenity" : "bench",
+      "direction" : "230"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4177771,
+        52.4868231
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 125053336,
+      "@contributionChangesetId" : 125053336,
+      "@geometryChange" : true,
+      "@osmId" : "node/2099738866",
+      "@osmType" : "node",
+      "@timestamp" : "2022-08-18T09:53:48Z",
+      "@version" : 3,
+      "amenity" : "bench",
+      "direction" : "230"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4177771,
+        52.4868231
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 129398120,
+      "@contributionChangesetId" : 129398120,
+      "@osmId" : "node/2099738866",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2022-11-26T11:18:56Z",
+      "@version" : 4,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "direction" : "230"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.427706,
+        52.4899912
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 55639274,
+      "@contributionChangesetId" : 55639274,
+      "@creation" : true,
+      "@osmId" : "node/5353403709",
+      "@osmType" : "node",
+      "@timestamp" : "2018-01-21T22:00:53Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "material" : "wood",
+      "seats" : "3"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4148355,
+        52.48749
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 57534815,
+      "@contributionChangesetId" : 57534815,
+      "@creation" : true,
+      "@osmId" : "node/5505702120",
+      "@osmType" : "node",
+      "@timestamp" : "2018-03-26T13:09:01Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "seats" : "3"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4148609,
+        52.4874935
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 101721477,
+      "@contributionChangesetId" : 101721477,
+      "@geometryChange" : true,
+      "@osmId" : "node/5505702120",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2021-03-25T13:00:48Z",
+      "@version" : 2,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "direction" : "275",
+      "seats" : "3"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4160931,
+        52.4870232
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 57534815,
+      "@contributionChangesetId" : 57534815,
+      "@creation" : true,
+      "@osmId" : "node/5505705721",
+      "@osmType" : "node",
+      "@timestamp" : "2018-03-26T13:09:01Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "seats" : "3"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4160931,
+        52.4870232
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 101721477,
+      "@contributionChangesetId" : 101721477,
+      "@osmId" : "node/5505705721",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2021-03-25T13:00:48Z",
+      "@version" : 2,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "direction" : "200",
+      "seats" : "3"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4161631,
+        52.4870114
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 57534815,
+      "@contributionChangesetId" : 57534815,
+      "@creation" : true,
+      "@osmId" : "node/5505705722",
+      "@osmType" : "node",
+      "@timestamp" : "2018-03-26T13:09:01Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "seats" : "3"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4161631,
+        52.4870114
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 101721477,
+      "@contributionChangesetId" : 101721477,
+      "@osmId" : "node/5505705722",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2021-03-25T13:00:48Z",
+      "@version" : 2,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "direction" : "200",
+      "seats" : "3"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4152824,
+        52.4871138
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 57534815,
+      "@contributionChangesetId" : 57534815,
+      "@creation" : true,
+      "@osmId" : "node/5505705723",
+      "@osmType" : "node",
+      "@timestamp" : "2018-03-26T13:09:01Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "seats" : "3"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4152824,
+        52.4871138
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 101721477,
+      "@contributionChangesetId" : 101721477,
+      "@osmId" : "node/5505705723",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2021-03-25T13:00:48Z",
+      "@version" : 2,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "direction" : "188",
+      "seats" : "3"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4153383,
+        52.4871082
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 57534815,
+      "@contributionChangesetId" : 57534815,
+      "@creation" : true,
+      "@osmId" : "node/5505705724",
+      "@osmType" : "node",
+      "@timestamp" : "2018-03-26T13:09:02Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "seats" : "3"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4153383,
+        52.4871082
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 101721477,
+      "@contributionChangesetId" : 101721477,
+      "@osmId" : "node/5505705724",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2021-03-25T13:00:48Z",
+      "@version" : 2,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "direction" : "188",
+      "seats" : "3"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.415415,
+        52.4871028
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 57534815,
+      "@contributionChangesetId" : 57534815,
+      "@creation" : true,
+      "@osmId" : "node/5505705725",
+      "@osmType" : "node",
+      "@timestamp" : "2018-03-26T13:09:02Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "seats" : "3"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.415415,
+        52.4871028
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 101721477,
+      "@contributionChangesetId" : 101721477,
+      "@osmId" : "node/5505705725",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2021-03-25T13:00:48Z",
+      "@version" : 2,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "direction" : "188",
+      "seats" : "3"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4121674,
+        52.4846656
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 89852551,
+      "@contributionChangesetId" : 89852551,
+      "@creation" : true,
+      "@osmId" : "node/7839674028",
+      "@osmType" : "node",
+      "@timestamp" : "2020-08-24T10:55:25Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "no",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4121233,
+        52.4846384
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 89852551,
+      "@contributionChangesetId" : 89852551,
+      "@creation" : true,
+      "@osmId" : "node/7839674033",
+      "@osmType" : "node",
+      "@timestamp" : "2020-08-24T10:55:25Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "no",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4170987,
+        52.4850427
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 89852551,
+      "@contributionChangesetId" : 89852551,
+      "@creation" : true,
+      "@osmId" : "node/7839674041",
+      "@osmType" : "node",
+      "@timestamp" : "2020-08-24T10:55:25Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4121023,
+        52.4846048
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 89852551,
+      "@contributionChangesetId" : 89852551,
+      "@creation" : true,
+      "@osmId" : "node/7839674051",
+      "@osmType" : "node",
+      "@timestamp" : "2020-08-24T10:55:25Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "no",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.416311,
+        52.4870397
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 101721477,
+      "@contributionChangesetId" : 101721477,
+      "@creation" : true,
+      "@osmId" : "node/8560490915",
+      "@osmType" : "node",
+      "@timestamp" : "2021-03-25T13:00:48Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "direction" : "162",
+      "seats" : "3"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4154685,
+        52.4870984
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 101721477,
+      "@contributionChangesetId" : 101721477,
+      "@creation" : true,
+      "@osmId" : "node/8560495018",
+      "@osmType" : "node",
+      "@timestamp" : "2021-03-25T13:00:48Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "direction" : "188",
+      "seats" : "3"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4149076,
+        52.4874912
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 101721477,
+      "@contributionChangesetId" : 101721477,
+      "@creation" : true,
+      "@osmId" : "node/8560495026",
+      "@osmType" : "node",
+      "@timestamp" : "2021-03-25T13:00:48Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "direction" : "124"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4162785,
+        52.4870067
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 101721477,
+      "@contributionChangesetId" : 101721477,
+      "@creation" : true,
+      "@osmId" : "node/8560495032",
+      "@osmType" : "node",
+      "@timestamp" : "2021-03-25T13:00:48Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "direction" : "162",
+      "seats" : "3"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4172456,
+        52.4856167
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105133338,
+      "@contributionChangesetId" : 105133338,
+      "@creation" : true,
+      "@osmId" : "node/8755558177",
+      "@osmType" : "node",
+      "@timestamp" : "2021-05-22T13:35:33Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "check_date" : "2021-05-16",
+      "direction" : "50",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4162413,
+        52.484762
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105133338,
+      "@contributionChangesetId" : 105133338,
+      "@creation" : true,
+      "@osmId" : "node/8755558182",
+      "@osmType" : "node",
+      "@timestamp" : "2021-05-22T13:35:33Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "check_date" : "2021-05-16",
+      "direction" : "100",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4162715,
+        52.4848838
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105133338,
+      "@contributionChangesetId" : 105133338,
+      "@creation" : true,
+      "@osmId" : "node/8755558183",
+      "@osmType" : "node",
+      "@timestamp" : "2021-05-22T13:35:33Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "check_date" : "2021-05-16",
+      "direction" : "100",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4163111,
+        52.4850679
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105133338,
+      "@contributionChangesetId" : 105133338,
+      "@creation" : true,
+      "@osmId" : "node/8755558184",
+      "@osmType" : "node",
+      "@timestamp" : "2021-05-22T13:35:33Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "check_date" : "2021-05-16",
+      "direction" : "100",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4163292,
+        52.4852051
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105133338,
+      "@contributionChangesetId" : 105133338,
+      "@creation" : true,
+      "@osmId" : "node/8755558185",
+      "@osmType" : "node",
+      "@timestamp" : "2021-05-22T13:35:33Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "check_date" : "2021-05-16",
+      "direction" : "100",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4163447,
+        52.4852949
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105133338,
+      "@contributionChangesetId" : 105133338,
+      "@creation" : true,
+      "@osmId" : "node/8755558186",
+      "@osmType" : "node",
+      "@timestamp" : "2021-05-22T13:35:33Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "check_date" : "2021-05-16",
+      "direction" : "100",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4163539,
+        52.4853598
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105133338,
+      "@contributionChangesetId" : 105133338,
+      "@creation" : true,
+      "@osmId" : "node/8755558187",
+      "@osmType" : "node",
+      "@timestamp" : "2021-05-22T13:35:33Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "check_date" : "2021-05-16",
+      "direction" : "100",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4163895,
+        52.485518
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105133338,
+      "@contributionChangesetId" : 105133338,
+      "@creation" : true,
+      "@osmId" : "node/8755558188",
+      "@osmType" : "node",
+      "@timestamp" : "2021-05-22T13:35:33Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "check_date" : "2021-05-16",
+      "direction" : "100",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4164511,
+        52.4856983
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105133338,
+      "@contributionChangesetId" : 105133338,
+      "@creation" : true,
+      "@osmId" : "node/8755558189",
+      "@osmType" : "node",
+      "@timestamp" : "2021-05-22T13:35:33Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "check_date" : "2021-05-16",
+      "direction" : "100",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4262224,
+        52.4849807
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105337391,
+      "@contributionChangesetId" : 105337391,
+      "@creation" : true,
+      "@osmId" : "node/8767410032",
+      "@osmType" : "node",
+      "@timestamp" : "2021-05-26T07:39:02Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "no",
+      "covered" : "yes",
+      "direction" : "7",
+      "material" : "concrete"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4262242,
+        52.4849964
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105337391,
+      "@contributionChangesetId" : 105337391,
+      "@creation" : true,
+      "@osmId" : "node/8767410037",
+      "@osmType" : "node",
+      "@timestamp" : "2021-05-26T07:39:02Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "no",
+      "covered" : "yes",
+      "direction" : "179",
+      "material" : "concrete"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4252769,
+        52.4857316
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105469174,
+      "@contributionChangesetId" : 105469174,
+      "@creation" : true,
+      "@osmId" : "node/8775512447",
+      "@osmType" : "node",
+      "@timestamp" : "2021-05-28T07:05:45Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "direction" : "220",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4177532,
+        52.4868362
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105475117,
+      "@contributionChangesetId" : 105475117,
+      "@creation" : true,
+      "@osmId" : "node/8775760115",
+      "@osmType" : "node",
+      "@timestamp" : "2021-05-28T08:33:15Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "direction" : "230"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4177645,
+        52.4868341
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 125053336,
+      "@contributionChangesetId" : 125053336,
+      "@geometryChange" : true,
+      "@osmId" : "node/8775760115",
+      "@osmType" : "node",
+      "@timestamp" : "2022-08-18T09:53:48Z",
+      "@version" : 2,
+      "amenity" : "bench",
+      "direction" : "230"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4177645,
+        52.4868341
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 129398120,
+      "@contributionChangesetId" : 129398120,
+      "@osmId" : "node/8775760115",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2022-11-26T11:19:06Z",
+      "@version" : 3,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "direction" : "230"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4189396,
+        52.4871827
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105475405,
+      "@contributionChangesetId" : 105475405,
+      "@creation" : true,
+      "@osmId" : "node/8775774596",
+      "@osmType" : "node",
+      "@timestamp" : "2021-05-28T08:37:39Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "direction" : "171"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4177742,
+        52.4868111
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105475117,
+      "@contributionChangesetId" : 105475117,
+      "@creation" : true,
+      "@osmId" : "node/8775781419",
+      "@osmType" : "node",
+      "@timestamp" : "2021-05-28T08:33:15Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "direction" : "230"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4177902,
+        52.4868114
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 125053336,
+      "@contributionChangesetId" : 125053336,
+      "@geometryChange" : true,
+      "@osmId" : "node/8775781419",
+      "@osmType" : "node",
+      "@timestamp" : "2022-08-18T09:53:48Z",
+      "@version" : 2,
+      "amenity" : "bench",
+      "direction" : "230"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4177902,
+        52.4868114
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 129398120,
+      "@contributionChangesetId" : 129398120,
+      "@osmId" : "node/8775781419",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2022-11-26T11:19:00Z",
+      "@version" : 3,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "direction" : "230"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4195831,
+        52.4898203
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 105696318,
+      "@contributionChangesetId" : 105696318,
+      "@creation" : true,
+      "@osmId" : "node/8790203768",
+      "@osmType" : "node",
+      "@timestamp" : "2021-06-01T19:41:36Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "check_date" : "2021-06-01",
+      "direction" : "3",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4158901,
+        52.4851277
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 107646074,
+      "@contributionChangesetId" : 107646074,
+      "@creation" : true,
+      "@osmId" : "node/8904716793",
+      "@osmType" : "node",
+      "@timestamp" : "2021-07-08T15:22:37Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "no",
+      "check_date" : "2021-07-08",
+      "direction" : "281",
+      "material" : "granite"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4152421,
+        52.4848647
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 107646074,
+      "@contributionChangesetId" : 107646074,
+      "@creation" : true,
+      "@osmId" : "node/8904716794",
+      "@osmType" : "node",
+      "@timestamp" : "2021-07-08T15:22:37Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "no",
+      "check_date" : "2021-07-08",
+      "direction" : "79",
+      "material" : "granite"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4152337,
+        52.484884
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 107646074,
+      "@contributionChangesetId" : 107646074,
+      "@creation" : true,
+      "@osmId" : "node/8904716795",
+      "@osmType" : "node",
+      "@timestamp" : "2021-07-08T15:22:37Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "no",
+      "check_date" : "2021-07-08",
+      "direction" : "79",
+      "material" : "granite"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.417077,
+        52.489272
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 117314453,
+      "@contributionChangesetId" : 117314453,
+      "@creation" : true,
+      "@osmId" : "node/9500271817",
+      "@osmType" : "node",
+      "@timestamp" : "2022-02-12T09:45:10Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "source:position" : "Mapillary 2021-10-14"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.417077,
+        52.489272
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 125356882,
+      "@contributionChangesetId" : 125356882,
+      "@osmId" : "node/9500271817",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2022-08-25T11:31:47Z",
+      "@version" : 2,
+      "amenity" : "bench",
+      "backrest" : "no",
+      "source:position" : "Mapillary 2021-10-14"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4141931,
+        52.486505
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 118569362,
+      "@contributionChangesetId" : 118569362,
+      "@creation" : true,
+      "@osmId" : "node/9583937710",
+      "@osmType" : "node",
+      "@timestamp" : "2022-03-16T22:07:56Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "check_date" : "2022-03-16",
+      "direction" : "278"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.413903,
+        52.4864733
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 118569362,
+      "@contributionChangesetId" : 118569362,
+      "@creation" : true,
+      "@osmId" : "node/9583937713",
+      "@osmType" : "node",
+      "@timestamp" : "2022-03-16T22:07:56Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "check_date" : "2022-03-16",
+      "direction" : "72"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4166675,
+        52.4863348
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 125053336,
+      "@contributionChangesetId" : 125053336,
+      "@creation" : true,
+      "@osmId" : "node/9961138340",
+      "@osmType" : "node",
+      "@timestamp" : "2022-08-18T09:53:48Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "colour" : "red",
+      "direction" : "243"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4166858,
+        52.4868187
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 125053336,
+      "@contributionChangesetId" : 125053336,
+      "@creation" : true,
+      "@osmId" : "node/9961138348",
+      "@osmType" : "node",
+      "@timestamp" : "2022-08-18T09:53:48Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "direction" : "95",
+      "seats" : "6"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4166858,
+        52.4868187
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 129398120,
+      "@contributionChangesetId" : 129398120,
+      "@osmId" : "node/9961138348",
+      "@osmType" : "node",
+      "@tagChange" : true,
+      "@timestamp" : "2022-11-26T11:18:04Z",
+      "@version" : 2,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "direction" : "95",
+      "seats" : "6"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4166057,
+        52.4864279
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 125053336,
+      "@contributionChangesetId" : 125053336,
+      "@creation" : true,
+      "@osmId" : "node/9961138354",
+      "@osmType" : "node",
+      "@timestamp" : "2022-08-18T09:53:48Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "colour" : "red",
+      "direction" : "243"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4174127,
+        52.4866162
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 125142551,
+      "@contributionChangesetId" : 125142551,
+      "@creation" : true,
+      "@osmId" : "node/9965606176",
+      "@osmType" : "node",
+      "@timestamp" : "2022-08-20T10:56:16Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "material" : "wood",
+      "seats" : "3"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4171859,
+        52.4866387
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 125142834,
+      "@contributionChangesetId" : 125142834,
+      "@creation" : true,
+      "@osmId" : "node/9965628081",
+      "@osmType" : "node",
+      "@timestamp" : "2022-08-20T11:04:06Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "material" : "wood"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4246148,
+        52.4886288
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 139191466,
+      "@contributionChangesetId" : 139191466,
+      "@creation" : true,
+      "@osmId" : "node/11076201511",
+      "@osmType" : "node",
+      "@timestamp" : "2023-07-29T23:11:27Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "check_date" : "2021-10-06",
+      "direction" : "250"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4176661,
+        52.486719
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 139766267,
+      "@contributionChangesetId" : 139766267,
+      "@creation" : true,
+      "@osmId" : "node/11108440883",
+      "@osmType" : "node",
+      "@timestamp" : "2023-08-11T20:46:44Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.417604,
+        52.4867242
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 139766267,
+      "@contributionChangesetId" : 139766267,
+      "@creation" : true,
+      "@osmId" : "node/11108440884",
+      "@osmType" : "node",
+      "@timestamp" : "2023-08-11T20:46:44Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes"
+    }
+  }, {
+    "type" : "Feature",
+    "geometry" : {
+      "type" : "Point",
+      "coordinates" : [
+        13.4246071,
+        52.4848402
+      ]
+    },
+    "properties" : {
+      "@changesetId" : 144750976,
+      "@contributionChangesetId" : 144750976,
+      "@creation" : true,
+      "@osmId" : "node/11393911354",
+      "@osmType" : "node",
+      "@timestamp" : "2023-12-04T11:27:50Z",
+      "@version" : 1,
+      "amenity" : "bench",
+      "backrest" : "yes",
+      "check_date" : "2023-12-04",
+      "direction" : "250",
+      "material" : "wood"
+    }
+  }]
+}
