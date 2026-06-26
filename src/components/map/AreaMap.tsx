@@ -37,6 +37,8 @@ interface Props {
   selectedId: string | null
   onHover: (osmId: string | null) => void
   onSelect: (osmId: string | null) => void
+  drawing: boolean
+  onDrawingChange: (drawing: boolean) => void
   onBboxChange: (bbox: Bbox) => void
   onCameraChange: (cam: { z: number; lat: number; lng: number }) => void
 }
@@ -50,6 +52,8 @@ export function AreaMap({
   selectedId,
   onHover,
   onSelect,
+  drawing,
+  onDrawingChange,
   onBboxChange,
   onCameraChange,
 }: Props) {
@@ -58,7 +62,6 @@ export function AreaMap({
 
   // Draft shown live while drawing/dragging; committed to the URL on mouse-up.
   const [draftBbox, setDraftBbox] = useState<Bbox | null>(null)
-  const [drawing, setDrawing] = useState(false)
 
   const cornerRef = useRef<Corner | null>(null)
   const drawStartRef = useRef<[number, number] | null>(null)
@@ -121,7 +124,7 @@ export function AreaMap({
     drawStartRef.current = null
     baseRef.current = null
     setDraftBbox(null)
-    setDrawing(false)
+    onDrawingChange(false)
     setPan(true)
   }
 
@@ -279,26 +282,12 @@ export function AreaMap({
         )}
       </Map>
 
-      {/* Draw control overlay */}
-      <div className="absolute top-2 left-2 flex flex-col gap-1">
-        <button
-          type="button"
-          onClick={() => {
-            setDrawing((d) => !d)
-            setDraftBbox(null)
-          }}
-          className={`rounded px-3 py-1.5 text-sm font-medium shadow ${
-            drawing ? 'bg-blue-600 text-white' : 'bg-white text-gray-800 hover:bg-gray-50'
-          }`}
-        >
-          {drawing ? 'Click-drag to draw…' : committedBbox ? 'Redraw area' : 'Draw area'}
-        </button>
-        {!committedBbox && !drawing && (
-          <span className="rounded bg-white/90 px-2 py-1 text-xs text-gray-600 shadow">
-            Draw a box, or type coordinates on the left.
-          </span>
-        )}
-      </div>
+      {/* Draw-mode hint (the trigger lives in the form's step 2) */}
+      {drawing && (
+        <div className="pointer-events-none absolute top-2 left-1/2 -translate-x-1/2 rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white shadow">
+          Click and drag to draw the area
+        </div>
+      )}
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import type { Deletion } from '../../lib/ohsome'
 import { osmHistoryUrl, osmChangesetUrl } from '../../lib/osm'
 import { downloadGeojson } from './exportGeojson'
+import { StepBadge } from '../StepBadge'
 
 interface Props {
   status: 'pending' | 'error' | 'success'
@@ -28,6 +29,7 @@ export function ResultsPanel({
   if (!hasApplied) {
     return (
       <Box>
+        <Heading>Results</Heading>
         <p className="text-sm text-gray-500">
           Set an area, an ohsome filter, and a date range, then press{' '}
           <span className="font-medium">Find deletions</span>.
@@ -39,6 +41,7 @@ export function ResultsPanel({
   if (isFetching) {
     return (
       <Box>
+        <Heading>Results</Heading>
         <p className="text-sm text-gray-500">Querying ohsome…</p>
       </Box>
     )
@@ -47,6 +50,7 @@ export function ResultsPanel({
   if (status === 'error') {
     return (
       <Box>
+        <Heading>Results</Heading>
         <p className="text-sm text-red-600">{errorMessage ?? 'Request failed.'}</p>
       </Box>
     )
@@ -55,6 +59,7 @@ export function ResultsPanel({
   if (deletions.length === 0) {
     return (
       <Box>
+        <Heading>Results</Heading>
         <p className="text-sm text-gray-600">
           No deletions found for this area, filter, and time range.
         </p>
@@ -69,9 +74,9 @@ export function ResultsPanel({
     <Box>
       <div className="flex min-h-0 flex-col gap-2">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold">
+          <Heading>
             {deletions.length} deletion{deletions.length === 1 ? '' : 's'}
-          </h2>
+          </Heading>
         <button
           type="button"
           onClick={() => downloadGeojson(deletions)}
@@ -171,6 +176,16 @@ function summarizeTags(tags: Record<string, string>): string {
     .map(([k, v]) => `${k}=${v}`)
     .join(', ')
   return entries.length > 3 ? `${shown}, +${entries.length - 3}` : shown
+}
+
+/** Step-4 heading shown above every result state. */
+function Heading({ children }: { children: React.ReactNode }) {
+  return (
+    <h2 className="flex items-center gap-2 text-sm font-semibold">
+      <StepBadge n={4} />
+      {children}
+    </h2>
+  )
 }
 
 /** Highlighted card that frames the result area so it draws the eye. */

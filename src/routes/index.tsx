@@ -79,6 +79,8 @@ function HomePage() {
   // Cross-highlight state shared by the table and the map (ephemeral UI state).
   const [hoveredId, setHoveredId] = useState<string | null>(null)
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  // Draw mode is triggered from the form's step 2 and performed on the map.
+  const [drawing, setDrawing] = useState(false)
 
   const draftQuery = toOhsomeQuery(search)
   const errorMessage =
@@ -97,6 +99,8 @@ function HomePage() {
           extent={extent.data}
           canRun={draftQuery !== null}
           isRunning={contributions.isFetching}
+          drawing={drawing}
+          onToggleDraw={() => setDrawing((d) => !d)}
           onPatch={patchSearch}
           onRun={() => {
             const q = toOhsomeQuery(search)
@@ -125,6 +129,8 @@ function HomePage() {
           selectedId={selectedId}
           onHover={setHoveredId}
           onSelect={setSelectedId}
+          drawing={drawing}
+          onDrawingChange={setDrawing}
           onBboxChange={(bbox) => patchSearch({ bbox })}
           onCameraChange={(cam) => patchSearch(cam, { replace: true })}
         />

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import type { AppSearch } from '../../search-schema'
-import { type Bbox, isValidBbox, bboxAreaKm2 } from '../../lib/bbox'
+import { type Bbox, isValidBbox, bboxAreaKm2, bboxToOhsomeParam } from '../../lib/bbox'
 import { buildContributionsUrl } from '../../lib/ohsome'
 import type { DataExtent } from '../../lib/ohsome-metadata'
+import { StepBadge } from '../StepBadge'
 
 const FILTER_EXAMPLE = 'amenity=bench and type:node'
 const AREA_WARN_KM2 = 25
@@ -12,13 +13,24 @@ interface Props {
   extent: DataExtent | undefined
   canRun: boolean
   isRunning: boolean
+  drawing: boolean
+  onToggleDraw: () => void
   onPatch: (patch: Partial<AppSearch>) => void
   onRun: () => void
 }
 
 const numOrEmpty = (n: number | undefined) => (n === undefined ? '' : String(n))
 
-export function QueryForm({ search, extent, canRun, isRunning, onPatch, onRun }: Props) {
+export function QueryForm({
+  search,
+  extent,
+  canRun,
+  isRunning,
+  drawing,
+  onToggleDraw,
+  onPatch,
+  onRun,
+}: Props) {
   // Local string state for the four bbox fields so partial/invalid edits don't
   // wipe the URL. We push a valid bbox up as soon as all four parse.
   const [fields, setFields] = useState(() => bboxFields(search.bbox))
@@ -55,9 +67,12 @@ export function QueryForm({ search, extent, canRun, isRunning, onPatch, onRun }:
         if (canRun) onRun()
       }}
     >
-      {/* Filter */}
+      {/* Step 1: Filter */}
       <label className="flex flex-col gap-1">
-        <span className="text-sm font-medium">ohsome filter</span>
+        <span className="flex items-center gap-2 text-sm font-medium">
+          <StepBadge n={1} />
+          ohsome filter
+        </span>
         <input
           type="text"
           className="rounded border-gray-300 text-sm shadow-sm"
@@ -129,32 +144,53 @@ export function QueryForm({ search, extent, canRun, isRunning, onPatch, onRun }:
         </p>
       )}
 
-      {/* Bbox */}
+      {/* Step 2: Bbox */}
       <fieldset className="flex flex-col gap-2">
-        <legend className="text-sm font-medium">Bounding box</legend>
+        <legend className="flex items-center gap-2 text-sm font-medium">
+          <StepBadge n={2} />
+          Bounding box
+        </legend>
         <p className="text-xs text-gray-500">
-          Draw or drag the rectangle on the map, or type coordinates here — they stay in sync.
+          Set the area to search — draw it on the map, or open the coordinates below. Both stay in sync.
         </p>
-        <div className="grid grid-cols-2 gap-2">
-          {(['minLon', 'minLat', 'maxLon', 'maxLat'] as const).map((label, i) => (
-            <label key={label} className="flex flex-col gap-1">
-              <span className="text-xs text-gray-600">{label}</span>
-              <input
-                type="number"
-                step="any"
-                className="rounded border-gray-300 text-sm shadow-sm"
-                value={fields[i]}
-                onChange={(e) => setField(i as 0 | 1 | 2 | 3, e.target.value)}
-                aria-label={label}
-              />
-            </label>
-          ))}
-        </div>
-        {bbox && !bboxValid && (
-          <p className="text-xs text-red-600">
-            Invalid box: min must be less than max, longitude ∈ [-180, 180], latitude ∈ [-90, 90].
-          </p>
-        )}
+        <button
+          type="button"
+          onClick={onToggleDraw}
+          className={`self-start rounded px-3 py-1.5 text-sm font-medium shadow-sm ${
+            drawing
+              ? 'bg-blue-600 text-white'
+              : 'border border-blue-600 text-blue-700 hover:bg-blue-50'
+          }`}
+        >
+          {drawing ? 'ⓘ Click and drag in the map' : 'Draw area'}
+        </button>
+
+        <details className="rounded border border-gray-200 bg-gray-50 px-2 py-1">
+          <summary className="cursor-pointer text-xs text-gray-600">
+            Bbox: <span className="font-mono">{bbox ? bboxToOhsomeParam(bbox).replaceAll(',', ', ') : 'not set'}</span>
+          </summary>
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            {(['minLon', 'minLat', 'maxLon', 'maxLat'] as const).map((label, i) => (
+              <label key={label} className="flex flex-col gap-1">
+                <span className="text-xs text-gray-600">{label}</span>
+                <input
+                  type="number"
+                  step="any"
+                  className="rounded border-gray-300 text-sm shadow-sm"
+                  value={fields[i]}
+                  onChange={(e) => setField(i as 0 | 1 | 2 | 3, e.target.value)}
+                  aria-label={label}
+                />
+              </label>
+            ))}
+          </div>
+          {bbox && !bboxValid && (
+            <p className="mt-2 text-xs text-red-600">
+              Invalid box: min must be less than max, longitude ∈ [-180, 180], latitude ∈ [-90, 90].
+            </p>
+          )}
+        </details>
+
         {areaKm2 !== null && areaKm2 > AREA_WARN_KM2 && (
           <p className="text-xs text-amber-600">
             Large area (~{areaKm2.toFixed(0)} km²). This may be a heavy query — consider narrowing it.
@@ -162,11 +198,13 @@ export function QueryForm({ search, extent, canRun, isRunning, onPatch, onRun }:
         )}
       </fieldset>
 
+      {/* Step 3: Search */}
       <button
         type="submit"
         disabled={!canRun || isRunning}
-        className="rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm enabled:hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-300"
+        className="flex items-center justify-center gap-2 rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm enabled:hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-300"
       >
+        <StepBadge n={3} className="bg-white text-blue-600" />
         {isRunning ? 'Finding deletions…' : 'Find deletions'}
       </button>
 
