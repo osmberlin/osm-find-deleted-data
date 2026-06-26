@@ -94,7 +94,9 @@ export function QueryForm({
         </span>
       </label>
 
-      {/* Step 2: Dates (the badge in front of "From" covers the whole range) */}
+      {/* Step 2: Dates (the badge in front of "From" covers the whole range).
+          Inputs + quick range + data-range note are grouped with a tight gap. */}
+      <div className="flex flex-col gap-1">
       <div className="grid grid-cols-2 gap-3">
         <label className="flex flex-col gap-1">
           <span className="flex items-center gap-2 text-sm font-medium">
@@ -124,7 +126,7 @@ export function QueryForm({
           />
         </label>
       </div>
-      <div className="-mt-2 flex items-center gap-3 text-xs">
+      <div className="flex items-center gap-3 text-xs">
         <span className="text-gray-500">Quick range:</span>
         <button
           type="button"
@@ -146,6 +148,7 @@ export function QueryForm({
           ohsome data available {extent.from} → {extent.to}. The end date must be within this range.
         </p>
       )}
+      </div>
 
       {/* Step 3: Bbox */}
       <fieldset className="flex flex-col gap-2">
