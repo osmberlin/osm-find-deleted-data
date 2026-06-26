@@ -1,0 +1,4 @@
+[install]
+# FMC tech-stack best practice: don't install packages newer than 5 days
+# (supply-chain safety window).
+minimumReleaseAge = 5
