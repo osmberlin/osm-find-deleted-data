@@ -52,11 +52,12 @@ export function ResultsPanel({ status, isFetching, hasApplied, errorMessage, del
   const unlocated = deletions.length - located
 
   return (
-    <div className="flex min-h-0 flex-col gap-2">
-      <div className="flex items-center justify-between">
-        <h2 className="text-sm font-semibold">
-          {deletions.length} deletion{deletions.length === 1 ? '' : 's'}
-        </h2>
+    <Box>
+      <div className="flex min-h-0 flex-col gap-2">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-semibold">
+            {deletions.length} deletion{deletions.length === 1 ? '' : 's'}
+          </h2>
         <button
           type="button"
           onClick={() => downloadGeojson(deletions)}
@@ -132,7 +133,8 @@ export function ResultsPanel({ status, isFetching, hasApplied, errorMessage, del
           </tbody>
         </table>
       </div>
-    </div>
+      </div>
+    </Box>
   )
 }
 
@@ -146,6 +148,11 @@ function summarizeTags(tags: Record<string, string>): string {
   return entries.length > 3 ? `${shown}, +${entries.length - 3}` : shown
 }
 
+/** Highlighted card that frames the result area so it draws the eye. */
 function Box({ children }: { children: React.ReactNode }) {
-  return <div className="rounded border border-gray-200 bg-gray-50 p-3">{children}</div>
+  return (
+    <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 shadow-sm ring-1 ring-blue-100">
+      {children}
+    </div>
+  )
 }

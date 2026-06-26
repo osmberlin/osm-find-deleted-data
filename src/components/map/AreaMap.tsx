@@ -23,7 +23,7 @@ import {
   moveCorner,
 } from '../../lib/bbox'
 import type { Deletion } from '../../lib/ohsome'
-import { osmHistoryUrl } from '../../lib/osm'
+import { osmHistoryUrl, osmChangesetUrl } from '../../lib/osm'
 
 // OpenFreeMap basemap (Maptiler is the documented fallback if this is ever down).
 const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty'
@@ -192,23 +192,54 @@ export function AreaMap({ search, deletions, onBboxChange, onCameraChange }: Pro
             onClose={() => setSelected(null)}
             closeOnClick={false}
           >
-            <div className="text-xs">
-              <div className="font-mono">{selected.osmId}</div>
-              {selected.ref && (
-                <a
-                  className="text-blue-600 underline"
-                  href={osmHistoryUrl(
-                    selected.ref,
-                    selected.lat !== undefined && selected.lon !== undefined
-                      ? { lat: selected.lat, lon: selected.lon }
-                      : undefined,
+            <div className="min-w-[12rem] text-xs leading-5">
+              <div className="font-mono font-medium">
+                {selected.ref ? (
+                  <a
+                    className="text-blue-600 underline"
+                    href={osmHistoryUrl(selected.ref, { lat: selected.lat, lon: selected.lon })}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {selected.osmId}
+                  </a>
+                ) : (
+                  selected.osmId
+                )}
+              </div>
+              <dl className="mt-1 grid grid-cols-[auto_1fr] gap-x-2">
+                <dt className="text-gray-500">Deleted</dt>
+                <dd>{(selected.timestamp ?? '').slice(0, 10) || '—'}</dd>
+                <dt className="text-gray-500">Changeset</dt>
+                <dd>
+                  {selected.changesetId !== undefined ? (
+                    <a
+                      className="text-blue-600 underline"
+                      href={osmChangesetUrl(selected.changesetId)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {selected.changesetId}
+                    </a>
+                  ) : (
+                    '—'
                   )}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  view history
-                </a>
-              )}
+                </dd>
+              </dl>
+              <div className="mt-1">
+                <div className="text-gray-500">Tags</div>
+                {Object.keys(selected.tags).length > 0 ? (
+                  <ul className="font-mono">
+                    {Object.entries(selected.tags).map(([k, v]) => (
+                      <li key={k}>
+                        {k}={v}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <span>—</span>
+                )}
+              </div>
             </div>
           </Popup>
         )}
