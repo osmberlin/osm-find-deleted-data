@@ -145,6 +145,8 @@ export function AreaMap({
         ref={mapRef}
         initialViewState={initialView}
         mapStyle={MAP_STYLE}
+        maxZoom={17}
+        minZoom={2}
         attributionControl={false}
         interactiveLayerIds={interactiveLayerIds}
         cursor={drawing ? 'crosshair' : hoveredId ? 'pointer' : undefined}
