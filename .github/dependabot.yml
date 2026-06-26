@@ -1,4 +1,5 @@
 version: 2
+# Dependencies resolve from the public npm registry (see /.npmrc).
 updates:
   # App dependencies (package.json / bun.lock) — one grouped PR per week.
   - package-ecosystem: npm
