@@ -1,5 +1,5 @@
 import 'maplibre-gl/dist/maplibre-gl.css'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Map, {
   Source,
   Layer,
@@ -33,20 +33,32 @@ const DELETION_LAYER = 'deletions'
 interface Props {
   search: AppSearch
   deletions: Deletion[]
+  hoveredId: string | null
+  selectedId: string | null
+  onHover: (osmId: string | null) => void
+  onSelect: (osmId: string | null) => void
   onBboxChange: (bbox: Bbox) => void
   onCameraChange: (cam: { z: number; lat: number; lng: number }) => void
 }
 
 const round = (n: number, dp: number) => Number(n.toFixed(dp))
 
-export function AreaMap({ search, deletions, onBboxChange, onCameraChange }: Props) {
+export function AreaMap({
+  search,
+  deletions,
+  hoveredId,
+  selectedId,
+  onHover,
+  onSelect,
+  onBboxChange,
+  onCameraChange,
+}: Props) {
   const committedBbox =
     search.bbox && isValidBbox(search.bbox as Bbox) ? (search.bbox as Bbox) : null
 
   // Draft shown live while drawing/dragging; committed to the URL on mouse-up.
   const [draftBbox, setDraftBbox] = useState<Bbox | null>(null)
   const [drawing, setDrawing] = useState(false)
-  const [selected, setSelected] = useState<Deletion | null>(null)
 
   const cornerRef = useRef<Corner | null>(null)
   const drawStartRef = useRef<[number, number] | null>(null)
@@ -54,6 +66,14 @@ export function AreaMap({ search, deletions, onBboxChange, onCameraChange }: Pro
   const mapRef = useRef<MapRef | null>(null)
 
   const effectiveBbox = draftBbox ?? committedBbox
+  const activeId = hoveredId ?? selectedId
+  const selected = deletions.find((d) => d.osmId === selectedId) ?? null
+
+  // Bring a selected, located deletion into view.
+  useEffect(() => {
+    if (!selected || selected.lon === undefined || selected.lat === undefined) return
+    mapRef.current?.getMap().easeTo({ center: [selected.lon, selected.lat], duration: 400 })
+  }, [selected])
 
   const [initialView] = useState(() => initialViewState(search))
 
@@ -88,7 +108,11 @@ export function AreaMap({ search, deletions, onBboxChange, onCameraChange }: Pro
     if (drawing && drawStartRef.current) {
       const [lng0, lat0] = drawStartRef.current
       setDraftBbox(normalizeBbox([lng0, lat0, e.lngLat.lng, e.lngLat.lat]))
+      return
     }
+    // Hover-link deletion markers to the table.
+    const hit = e.features?.find((f) => f.layer.id === DELETION_LAYER)
+    onHover((hit?.properties?.osmId as string | undefined) ?? null)
   }
 
   const finishInteraction = () => {
@@ -107,10 +131,7 @@ export function AreaMap({ search, deletions, onBboxChange, onCameraChange }: Pro
 
   const onClick = (e: MapLayerMouseEvent) => {
     const hit = e.features?.find((f) => f.layer.id === DELETION_LAYER)
-    if (hit) {
-      const osmId = hit.properties?.osmId as string | undefined
-      setSelected(deletions.find((d) => d.osmId === osmId) ?? null)
-    }
+    if (hit) onSelect((hit.properties?.osmId as string | undefined) ?? null)
   }
 
   const interactiveLayerIds = [HANDLE_LAYER, DELETION_LAYER]
@@ -123,7 +144,8 @@ export function AreaMap({ search, deletions, onBboxChange, onCameraChange }: Pro
         mapStyle={MAP_STYLE}
         attributionControl={false}
         interactiveLayerIds={interactiveLayerIds}
-        cursor={drawing ? 'crosshair' : undefined}
+        cursor={drawing ? 'crosshair' : hoveredId ? 'pointer' : undefined}
+        onMouseLeave={() => onHover(null)}
         onMoveEnd={(e: ViewStateChangeEvent) =>
           onCameraChange({
             z: round(e.viewState.zoom, 2),
@@ -181,6 +203,18 @@ export function AreaMap({ search, deletions, onBboxChange, onCameraChange }: Pro
                 'circle-stroke-width': 1.5,
               }}
             />
+            {/* Highlight the row/marker the user is hovering or has selected. */}
+            <Layer
+              id="deletions-active"
+              type="circle"
+              filter={['==', ['get', 'osmId'], activeId ?? '']}
+              paint={{
+                'circle-radius': 9,
+                'circle-color': '#f59e0b',
+                'circle-stroke-color': '#ffffff',
+                'circle-stroke-width': 2,
+              }}
+            />
           </Source>
         )}
 
@@ -189,7 +223,7 @@ export function AreaMap({ search, deletions, onBboxChange, onCameraChange }: Pro
             longitude={selected.lon}
             latitude={selected.lat}
             anchor="bottom"
-            onClose={() => setSelected(null)}
+            onClose={() => onSelect(null)}
             closeOnClick={false}
           >
             <div className="min-w-[12rem] text-xs leading-5">

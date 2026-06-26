@@ -76,6 +76,10 @@ function HomePage() {
     [contributions.data],
   )
 
+  // Cross-highlight state shared by the table and the map (ephemeral UI state).
+  const [hoveredId, setHoveredId] = useState<string | null>(null)
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+
   const draftQuery = toOhsomeQuery(search)
   const errorMessage =
     contributions.error instanceof OhsomeApiError
@@ -105,6 +109,10 @@ function HomePage() {
           hasApplied={applied !== null}
           errorMessage={errorMessage}
           deletions={deletions}
+          hoveredId={hoveredId}
+          selectedId={selectedId}
+          onHover={setHoveredId}
+          onSelect={setSelectedId}
         />
       </section>
 
@@ -113,6 +121,10 @@ function HomePage() {
         <AreaMap
           search={search}
           deletions={deletions}
+          hoveredId={hoveredId}
+          selectedId={selectedId}
+          onHover={setHoveredId}
+          onSelect={setSelectedId}
           onBboxChange={(bbox) => patchSearch({ bbox })}
           onCameraChange={(cam) => patchSearch(cam, { replace: true })}
         />

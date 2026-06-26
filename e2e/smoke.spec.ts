@@ -67,6 +67,15 @@ test('a complete shared link auto-runs and lists deletions with history links', 
   await expect(page.getByText('Generated ohsome request')).toBeVisible()
 })
 
+test('hovering a result row highlights it (table <-> map link)', async ({ page }) => {
+  await mockExternals(page)
+  await page.goto(completeQuery)
+
+  const firstRow = page.locator('tbody tr').first()
+  await firstRow.hover()
+  await expect(firstRow).toHaveClass(/bg-amber-100/)
+})
+
 test('typing a coordinate updates the URL (input → map sync)', async ({ page }) => {
   await mockExternals(page)
   await page.goto(completeQuery)

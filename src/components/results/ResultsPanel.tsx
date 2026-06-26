@@ -8,9 +8,23 @@ interface Props {
   hasApplied: boolean
   errorMessage: string | null
   deletions: Deletion[]
+  hoveredId: string | null
+  selectedId: string | null
+  onHover: (osmId: string | null) => void
+  onSelect: (osmId: string | null) => void
 }
 
-export function ResultsPanel({ status, isFetching, hasApplied, errorMessage, deletions }: Props) {
+export function ResultsPanel({
+  status,
+  isFetching,
+  hasApplied,
+  errorMessage,
+  deletions,
+  hoveredId,
+  selectedId,
+  onHover,
+  onSelect,
+}: Props) {
   if (!hasApplied) {
     return (
       <Box>
@@ -86,8 +100,18 @@ export function ResultsPanel({ status, isFetching, hasApplied, errorMessage, del
             </tr>
           </thead>
           <tbody>
-            {deletions.map((d, i) => (
-              <tr key={`${d.osmId}-${i}`} className="border-t border-gray-100 align-top">
+            {deletions.map((d, i) => {
+              const active = d.osmId === selectedId || d.osmId === hoveredId
+              return (
+              <tr
+                key={`${d.osmId}-${i}`}
+                className={`border-t border-gray-100 align-top ${
+                  active ? 'bg-amber-100' : 'hover:bg-blue-100/60'
+                } ${d.lon !== undefined ? 'cursor-pointer' : ''}`}
+                onMouseEnter={() => onHover(d.osmId)}
+                onMouseLeave={() => onHover(null)}
+                onClick={() => onSelect(d.osmId)}
+              >
                 <td className="px-2 py-1">
                   {d.ref ? (
                     <a
@@ -129,7 +153,8 @@ export function ResultsPanel({ status, isFetching, hasApplied, errorMessage, del
                 </td>
                 <td className="px-2 py-1 text-gray-600">{summarizeTags(d.tags)}</td>
               </tr>
-            ))}
+              )
+            })}
           </tbody>
         </table>
       </div>
