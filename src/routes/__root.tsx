@@ -32,7 +32,7 @@ function RootComponent() {
           >
             HeiGIT
           </a>{' '}
-          for making this possible.
+          for providing the preprocessed OSM history data.
         </p>
       </header>
       <main className="min-h-0 flex-1">
