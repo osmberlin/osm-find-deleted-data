@@ -26,7 +26,7 @@ function RootComponent() {
           Thanks to{' '}
           <a
             className="text-blue-600 underline"
-            href="https://ohsome-now.heigit.org/"
+            href="https://dashboard.ohsome.org/en/"
             target="_blank"
             rel="noreferrer"
           >
