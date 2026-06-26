@@ -106,8 +106,25 @@ export function QueryForm({ search, extent, canRun, isRunning, onPatch, onRun }:
           />
         </label>
       </div>
+      <div className="-mt-2 flex items-center gap-3 text-xs">
+        <span className="text-gray-500">Quick range:</span>
+        <button
+          type="button"
+          className="text-blue-600 underline"
+          onClick={() => onPatch(presetRange('month', extent))}
+        >
+          last month
+        </button>
+        <button
+          type="button"
+          className="text-blue-600 underline"
+          onClick={() => onPatch(presetRange('year', extent))}
+        >
+          last year
+        </button>
+      </div>
       {extent && (
-        <p className="-mt-2 text-xs text-gray-500">
+        <p className="text-xs text-gray-500">
           ohsome data available {extent.from} → {extent.to}. The end date must be within this range.
         </p>
       )}
@@ -156,6 +173,21 @@ export function QueryForm({ search, extent, canRun, isRunning, onPatch, onRun }:
       {url && <GeneratedUrl url={url} />}
     </form>
   )
+}
+
+const isoDay = (d: Date) => d.toISOString().slice(0, 10)
+
+/**
+ * Build a "last month" / "last year" range. The end is anchored to the latest
+ * available data (so it's always a valid ohsome end date), falling back to today
+ * before the data extent has loaded.
+ */
+function presetRange(period: 'month' | 'year', extent: DataExtent | undefined) {
+  const to = extent?.to ? new Date(`${extent.to}T00:00:00Z`) : new Date()
+  const from = new Date(to)
+  if (period === 'year') from.setUTCFullYear(from.getUTCFullYear() - 1)
+  else from.setUTCMonth(from.getUTCMonth() - 1)
+  return { from: isoDay(from), to: isoDay(to) }
 }
 
 function bboxFields(bbox: AppSearch['bbox']): [string, string, string, string] {
