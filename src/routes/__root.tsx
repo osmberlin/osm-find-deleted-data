@@ -12,9 +12,9 @@ function RootComponent() {
           <img
             src={`${import.meta.env.BASE_URL}favicon.svg`}
             alt=""
-            className="h-7 w-7"
-            width={28}
-            height={28}
+            className="h-9 w-9"
+            width={36}
+            height={36}
           />
           OSM Find Deleted Data
           <span className="ml-1 text-sm font-normal text-gray-500">

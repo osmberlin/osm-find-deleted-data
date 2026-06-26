@@ -84,4 +84,6 @@ test('typing a coordinate updates the URL (input → map sync)', async ({ page }
   await page.locator('summary', { hasText: 'Bbox:' }).click()
   await page.getByLabel('maxLon').fill('13.4300')
   await expect.poll(() => new URL(page.url()).search).toContain('13.43')
+  // Pretty URLs: arrays stay readable (unencoded brackets), not %5B/%5D.
+  expect(new URL(page.url()).search).toContain('bbox=[')
 })

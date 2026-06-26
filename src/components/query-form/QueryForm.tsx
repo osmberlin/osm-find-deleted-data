@@ -153,17 +153,32 @@ export function QueryForm({
         <p className="text-xs text-gray-500">
           Set the area to search — draw it on the map, or open the coordinates below. Both stay in sync.
         </p>
-        <button
-          type="button"
-          onClick={onToggleDraw}
-          className={`self-start rounded px-3 py-1.5 text-sm font-medium shadow-sm ${
-            drawing
-              ? 'bg-orange-600 text-white'
-              : 'border border-orange-600 text-orange-700 hover:bg-orange-50'
-          }`}
-        >
-          {drawing ? 'ⓘ Click and drag in the map' : 'Draw area'}
-        </button>
+        {drawing ? (
+          <button
+            type="button"
+            onClick={onToggleDraw}
+            className="self-start rounded bg-orange-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm"
+          >
+            ⓘ Click and drag in the map
+          </button>
+        ) : bbox !== undefined ? (
+          // An area is set: offer to clear it, nudging the user to draw a new one.
+          <button
+            type="button"
+            onClick={() => onPatch({ bbox: undefined })}
+            className="self-start rounded border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+          >
+            Redraw
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={onToggleDraw}
+            className="self-start rounded bg-orange-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-orange-700"
+          >
+            Draw area
+          </button>
+        )}
 
         <details className="rounded border border-gray-200 bg-gray-50 px-2 py-1">
           <summary className="cursor-pointer text-xs text-gray-600">

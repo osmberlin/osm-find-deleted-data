@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { routeTree } from './routeTree.gen'
+import { routerSearch } from './router-search'
 import './styles.css'
 
 // Conservative defaults: never refetch on focus, never auto-retry. Combined with
@@ -16,6 +17,10 @@ const router = createRouter({
   // Matches the Vite `base` so client routing works under /<repo>/ on GitHub Pages.
   basepath: import.meta.env.BASE_URL,
   defaultPreload: 'intent',
+  trailingSlash: 'never',
+  // Pretty, readable share URLs instead of percent-encoded JSON.
+  parseSearch: routerSearch.parse,
+  stringifySearch: routerSearch.stringify,
 })
 
 declare module '@tanstack/react-router' {
