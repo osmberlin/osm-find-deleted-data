@@ -8,7 +8,7 @@ import { StepBadge } from '../StepBadge'
 const FILTER_EXAMPLE = 'amenity=bench and type:node'
 const AREA_WARN_KM2 = 25
 const EXAMPLE_QUERY_URL =
-  'https://osmberlin.github.io/osm-find-deleted-data/?z=15.56&lat=52.47502&lng=13.42067&filter=amenity%253Dbench&from=2024-04-01&to=2026-06-19&bbox=%5B13.41291,52.472494,13.420682,52.476229'
+  'https://osmberlin.github.io/osm-find-deleted-data/?z=15.56&lat=52.47502&lng=13.42067&filter=amenity%3Dbench&from=2024-04-01&to=2026-06-19&bbox=%5B13.41291,52.472494,13.420682,52.476229%5D'
 
 interface Props {
   search: AppSearch
@@ -71,13 +71,12 @@ export function QueryForm({
     >
       {/* Step 1: Filter */}
       <label className="flex flex-col gap-1">
-        <span className="flex items-center gap-2 text-sm font-medium">
-          <StepBadge n={1} />
-          ohsome filter
-          <a
-            className="text-xs font-normal text-blue-600 underline"
-            href={EXAMPLE_QUERY_URL}
-          >
+        <span className="flex items-center justify-between text-sm font-medium">
+          <span className="flex items-center gap-2">
+            <StepBadge n={1} />
+            ohsome filter
+          </span>
+          <a className="text-xs font-normal text-blue-600 underline" href={EXAMPLE_QUERY_URL}>
             Example query
           </a>
         </span>

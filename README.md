@@ -15,7 +15,7 @@ its OpenStreetMap **history** (who deleted it, when, in which changeset). Replac
 4. **Find deletions** — results show in a table and on the map.
 
 Every input lives in the URL, so any query is a shareable link. Example query:
-<https://osmberlin.github.io/osm-find-deleted-data/?z=15.56&lat=52.47502&lng=13.42067&filter=amenity%253Dbench&from=2024-04-01&to=2026-06-19&bbox=%5B13.41291,52.472494,13.420682,52.476229>
+<https://osmberlin.github.io/osm-find-deleted-data/?z=15.56&lat=52.47502&lng=13.42067&filter=amenity%3Dbench&from=2024-04-01&to=2026-06-19&bbox=%5B13.41291,52.472494,13.420682,52.476229%5D>
 
 ### Good to know
 
