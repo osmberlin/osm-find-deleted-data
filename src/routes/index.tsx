@@ -118,6 +118,25 @@ function HomePage() {
           onHover={setHoveredId}
           onSelect={setSelectedId}
         />
+
+        <footer className="mt-4 flex flex-col gap-1 border-t border-gray-200 pt-4 text-xs text-gray-500">
+          <a
+            className="text-blue-600 underline"
+            href="https://github.com/osmberlin/osm-find-deleted-data"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Code on GitHub
+          </a>
+          <a
+            className="text-blue-600 underline"
+            href="https://github.com/osmberlin/osm-find-deleted-data#alternative-approaches"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Alternative approaches
+          </a>
+        </footer>
       </section>
 
       {/* Right: map */}

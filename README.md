@@ -14,7 +14,8 @@ its OpenStreetMap **history** (who deleted it, when, in which changeset). Replac
 3. **Area** — draw a box on the map, or type coordinates.
 4. **Find deletions** — results show in a table and on the map.
 
-Every input lives in the URL, so any query is a shareable link.
+Every input lives in the URL, so any query is a shareable link. Example query:
+<https://osmberlin.github.io/osm-find-deleted-data/?z=15.56&lat=52.47502&lng=13.42067&filter=amenity%253Dbench&from=2024-04-01&to=2026-06-19&bbox=%5B13.41291,52.472494,13.420682,52.476229>
 
 ### Good to know
 
@@ -25,6 +26,35 @@ Every input lives in the URL, so any query is a shareable link.
   user on openstreetmap.org.
 - Queries run only on **Find deletions** (never on keystroke) and are cached, so each search hits
   ohsome at most once.
+
+## Alternative approaches
+
+### Ways — WAMY ("Wo sind meine Ways geblieben?")
+
+[WAMY](https://michreichert.de/projects/wamy/) is a dedicated analysis for **deleted ways** (this app
+is more general but derives way locations less reliably). Mind the data age — check when the dataset
+was last built on its [about page](https://michreichert.de/projects/wamy/about.html).
+
+- Code: <https://codeberg.org/nakaner/deleted-map>
+- Talk (German): [FOSSGIS 2026 — Wo sind meine Ways geblieben?](https://media.ccc.de/v/fossgis2026-82321-wo-sind-meine-ways-geblieben)
+
+### Overpass with a past date (tiny area)
+
+Alternatively, query Overpass at a **past date** and load a **tiny area**: at that date the
+now-deleted objects still existed, so they show up. This uses the `[date:...]` setting, which needs an
+Overpass instance with attic (historical) data, e.g. the main `overpass-api.de`.
+
+Same area and filter as the example query above, at the start date:
+
+```overpassql
+[out:json][timeout:25][date:"2024-04-01T00:00:00Z"];
+node[amenity=bench](52.472494,13.41291,52.476229,13.420682);
+out geom;
+```
+
+- Run it in [Overpass Turbo](https://overpass-turbo.eu/?Q=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%5Bdate%3A%222024-04-01T00%3A00%3A00Z%22%5D%3B%0Anode%5Bamenity%3Dbench%5D(52.472494%2C13.41291%2C52.476229%2C13.420682)%3B%0Aout%20geom%3B).
+- Docs: [Overpass QL (the `[date:…]` setting)](https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL)
+  and [Overpass API — attic/historical data](https://wiki.openstreetmap.org/wiki/Overpass_API).
 
 ## Develop
 
