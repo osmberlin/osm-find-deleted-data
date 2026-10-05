@@ -1,21 +1,127 @@
-version: 2
+# Dependabot policy: first Friday of the month 07:00 Europe/Berlin, one open PR per ecosystem,
+# grouped minor/patch bumps. Majors surface individually when the queue is empty.
 # Dependencies resolve from the public npm registry (see /.npmrc).
+version: 2
 updates:
-  # App dependencies (package.json / bun.lock) — one grouped PR per week.
-  - package-ecosystem: npm
-    directory: "/"
+  - package-ecosystem: bun
+    directories:
+      - /
     schedule:
-      interval: weekly
-    open-pull-requests-limit: 5
+      interval: cron
+      cronjob: '0 7 * * FRI#1'
+      timezone: Europe/Berlin
+    cooldown:
+      default-days: 5
+    open-pull-requests-limit: 1
+    exclude-paths:
+      - .cursor/**
+    commit-message:
+      prefix: chore
+      include: scope
     groups:
-      npm:
-        patterns: ["*"]
+      security-dev-tools:
+        applies-to: security-updates
+        patterns:
+          - 'oxlint*'
+          - 'oxfmt*'
+          - 'vitest*'
+          - '@playwright/*'
+          - '@testing-library/*'
+          - 'knip*'
+          - 'husky*'
+          - '@types/*'
+          - 'typescript'
+          - '@typescript/typescript-*'
+          - 'eslint*'
 
-  # GitHub Actions used in the workflows — one grouped PR per week.
+      shared-monorepo-tools:
+        applies-to: version-updates
+        group-by: dependency-name
+        patterns:
+          - 'oxlint*'
+          - 'oxfmt*'
+          - '@types/bun'
+
+      app-dev-minor-patch:
+        applies-to: version-updates
+        patterns:
+          - '@clack/*'
+          - '@heroicons/*'
+          - '@playwright/*'
+          - '@testing-library/*'
+          - '@total-typescript/*'
+          - '@vitejs/*'
+          - 'babel-plugin-*'
+          - 'eslint-*'
+          - 'husky'
+          - 'jsdom'
+          - 'knip'
+          - 'oxfmt'
+          - 'oxlint*'
+          - 'sharp'
+          - 'vitest'
+          - 'vite'
+          - '@types/*'
+          - 'typescript'
+          - '@typescript/typescript-*'
+          - 'dotenv'
+        update-types:
+          - minor
+          - patch
+
+      app-framework-minor-patch:
+        applies-to: version-updates
+        patterns:
+          - '@tanstack/*'
+          - '@tailwindcss/*'
+          - 'tailwindcss'
+          - '@turf/*'
+          - '@prisma/*'
+          - 'prisma'
+          - 'react'
+          - 'react-dom'
+          - '@types/react*'
+          - 'maplibre-gl'
+          - 'react-map-gl'
+          - 'better-auth'
+          - 'zod'
+        update-types:
+          - minor
+          - patch
+
+      app-prod-misc-patch:
+        applies-to: version-updates
+        update-types:
+          - patch
+        patterns:
+          - '*'
+        exclude-patterns:
+          - '@tanstack/*'
+          - '@tailwindcss/*'
+          - '@turf/*'
+          - '@prisma/*'
+          - 'prisma'
+          - 'react'
+          - 'react-dom'
+          - 'maplibre-gl'
+          - 'better-auth'
+          - 'zod'
+          - 'nitro*'
+          - '@maptiler/*'
+
   - package-ecosystem: github-actions
-    directory: "/"
+    directory: /
     schedule:
-      interval: weekly
+      interval: cron
+      cronjob: '0 7 * * FRI#1'
+      timezone: Europe/Berlin
+    cooldown:
+      default-days: 5
+    open-pull-requests-limit: 1
     groups:
-      github-actions:
-        patterns: ["*"]
+      actions-minor-patch:
+        update-types:
+          - minor
+          - patch
+        patterns:
+          - '*'
