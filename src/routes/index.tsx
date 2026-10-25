@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
+import { hashKey, useQuery } from '@tanstack/react-query'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { searchSchema, type AppSearch } from '../search-schema'
 import { type Bbox, isValidBbox } from '../lib/bbox'
@@ -8,6 +8,7 @@ import {
   extractDeletions,
   type OhsomeQuery,
   OhsomeApiError,
+  OHSOME_API_KEY,
 } from '../lib/ohsome'
 import { fetchDataExtent } from '../lib/ohsome-metadata'
 import { QueryForm } from '../components/query-form/QueryForm'
@@ -18,6 +19,20 @@ export const Route = createFileRoute('/')({
   validateSearch: searchSchema,
   component: HomePage,
 })
+
+/** Human-readable text for a failed ohsome request, by HTTP status. */
+function describeApiError(error: OhsomeApiError): string {
+  switch (error.status) {
+    case 401:
+      return 'ohsome API key missing or invalid.'
+    case 403:
+      return 'ohsome API daily quota exceeded (403). Try again tomorrow.'
+    case 429:
+      return 'Rate limit exceeded (max 15 requests per minute). Try again in a minute.'
+    default:
+      return `ohsome API error (${error.status}): ${error.message}`
+  }
+}
 
 /** Build a runnable ohsome query from the URL search, or null if incomplete/invalid. */
 function toOhsomeQuery(search: AppSearch): OhsomeQuery | null {
@@ -48,7 +63,7 @@ function HomePage() {
     if (didAutoRun.current) return
     didAutoRun.current = true
     const q = toOhsomeQuery(search)
-    if (q) setApplied(q)
+    if (q && OHSOME_API_KEY) setApplied(q)
     // run-once on mount
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -66,6 +81,7 @@ function HomePage() {
   const extent = useQuery({
     queryKey: ['ohsome-metadata'],
     queryFn: ({ signal }) => fetchDataExtent(signal),
+    enabled: OHSOME_API_KEY !== undefined,
     staleTime: Infinity,
     gcTime: Infinity,
     retry: false,
@@ -83,9 +99,11 @@ function HomePage() {
   const [drawing, setDrawing] = useState(false)
 
   const draftQuery = toOhsomeQuery(search)
+  // Without a key baked into the build, every request would fail with 401.
+  const canRun = draftQuery !== null && OHSOME_API_KEY !== undefined
   const errorMessage =
     contributions.error instanceof OhsomeApiError
-      ? `ohsome API error (${contributions.error.status}): ${contributions.error.message}`
+      ? describeApiError(contributions.error)
       : contributions.error
         ? String(contributions.error)
         : null
@@ -94,17 +112,29 @@ function HomePage() {
     <div className="grid h-full grid-rows-[1fr] lg:grid-cols-[minmax(360px,420px)_1fr]">
       {/* Left: controls + results */}
       <section className="flex min-h-0 flex-col gap-4 overflow-y-auto border-r border-gray-200 bg-white p-4">
+        {OHSOME_API_KEY === undefined && (
+          <p className="rounded border border-red-200 bg-red-50 p-2 text-xs text-red-700">
+            This build has no ohsome API key (VITE_OHSOME_API_KEY), so queries are disabled.
+          </p>
+        )}
         <QueryForm
           search={search}
           extent={extent.data}
-          canRun={draftQuery !== null}
+          canRun={canRun}
           isRunning={contributions.isFetching}
           drawing={drawing}
           onToggleDraw={() => setDrawing((d) => !d)}
           onPatch={patchSearch}
           onRun={() => {
             const q = toOhsomeQuery(search)
-            if (q) setApplied(q)
+            if (!q || !canRun) return
+            // The same query again only refetches after a failure (e.g. a rate
+            // limit); successful results stay cached so each search runs once.
+            if (contributions.isError && hashKey([q]) === hashKey([applied])) {
+              void contributions.refetch()
+            } else {
+              setApplied(q)
+            }
           }}
         />
         <ResultsPanel

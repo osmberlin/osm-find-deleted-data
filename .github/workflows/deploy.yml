@@ -29,6 +29,8 @@ jobs:
 
       - name: Build (sets Pages base path + 404 SPA fallback)
         run: bun run build
+        env:
+          VITE_OHSOME_API_KEY: ${{ secrets.OHSOME_API_KEY }}
 
       - uses: actions/configure-pages@v6
 

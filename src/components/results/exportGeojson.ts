@@ -1,24 +1,24 @@
-import type { Feature, FeatureCollection, Point } from 'geojson'
+import type { Feature, FeatureCollection, Geometry } from 'geojson'
 import type { Deletion } from '../../lib/ohsome'
 
 /**
- * Build a GeoJSON FeatureCollection of the deletions. Located deletions get a
- * Point; deletions whose location couldn't be derived get null geometry (still
- * valid GeoJSON) so nothing is silently dropped.
+ * Build a GeoJSON FeatureCollection of the deletions. Each deletion keeps its
+ * last known geometry from ohsome; deletions without one get null geometry
+ * (still valid GeoJSON) so nothing is silently dropped.
  */
-export function deletionsToGeojson(deletions: Deletion[]): FeatureCollection<Point | null> {
-  const features: Feature<Point | null>[] = deletions.map((d) => ({
+export function deletionsToGeojson(deletions: Deletion[]): FeatureCollection<Geometry | null> {
+  const features: Feature<Geometry | null>[] = deletions.map((d) => ({
     type: 'Feature',
-    geometry:
-      d.lon !== undefined && d.lat !== undefined
-        ? { type: 'Point', coordinates: [d.lon, d.lat] }
-        : null,
+    geometry: d.geometry ?? null,
+    // Tags first, so an OSM tag like `version=*` can't overwrite our metadata.
     properties: {
-      osmId: d.osmId,
-      deletedAt: d.timestamp ?? null,
-      changesetId: d.changesetId ?? null,
-      version: d.version ?? null,
       ...d.tags,
+      osmId: d.osmId,
+      deletedAt: d.timestamp,
+      changesetId: d.changesetId,
+      changesetComment: d.changesetComment ?? null,
+      userName: d.userName ?? null,
+      version: d.version,
     },
   }))
   return { type: 'FeatureCollection', features }

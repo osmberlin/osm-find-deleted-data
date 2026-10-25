@@ -34,3 +34,5 @@ jobs:
 
       - name: E2E tests (fully mocked, no external services)
         run: bun run test:e2e
+        env:
+          VITE_OHSOME_API_KEY: test-key

@@ -1,11 +1,11 @@
 # OSM Find Deleted Data
 
 Find **deleted OpenStreetMap objects** in an area, using the
-[ohsome API](https://docs.ohsome.org/ohsome-api/v1/). A static single-page app — no backend.
+[ohsome API v2](https://docs.ohsome.org/ohsome-api/v2/). A static single-page app — no backend.
 
 Pick an area, a time range, and an ohsome filter → get every object that was deleted, each linked to
 its OpenStreetMap **history** (who deleted it, when, in which changeset). Replaces the manual
-"download GeoJSON → QGIS → filter `@deletion`" workflow.
+"download GeoJSON → QGIS → filter for deletions" workflow.
 
 ## Use it
 
@@ -19,13 +19,17 @@ Every input lives in the URL, so any query is a shareable link. Example query:
 
 ### Good to know
 
-- **Map location:** a deletion contribution has no geometry (the object is gone). Its marker is
-  derived from the object's earlier creation/edit *if that falls inside your time range* — otherwise
-  it's listed (flagged ⚑) without a marker. Widen the start date to capture creations.
-- **Editor:** ohsome doesn't expose usernames; the table links the **changeset**, which reveals the
-  user on openstreetmap.org.
+- **Map location:** each deletion comes with the object's last known geometry from ohsome, so its
+  marker shows where the object was before it was deleted. A deletion without any location is
+  listed (flagged ⚑) without a marker.
+- **Editor:** the table shows the username of the editor, linked to their OpenStreetMap profile, and
+  the changeset (hover it to see the changeset comment).
 - Queries run only on **Find deletions** (never on keystroke) and are cached, so each search hits
   ohsome at most once.
+- **API key and quota:** the build embeds a HeiGIT ohsome key (`VITE_OHSOME_API_KEY`; in the
+  deployed site it comes from the GitHub secret `OHSOME_API_KEY`). The key is publicly readable in
+  the built JavaScript, and every user of the app shares its quota: 250 requests per day and 15 per
+  minute. Without a key, the app shows a notice and disables queries.
 
 ## Alternative approaches
 
@@ -59,11 +63,15 @@ out geom;
 ## Develop
 
 ```bash
+cp .env.example .env # paste a free ohsome API key (https://account.heigit.org/manage/key)
 bun install
 bun run dev          # http://localhost:5173
 bun run check        # lint + typecheck + unit tests + build
-bun run test:e2e     # Playwright (fully mocked — no external calls)
+bun run test:e2e     # Playwright (fully mocked — no external calls, uses a placeholder key)
 ```
+
+The key is read at build time from `VITE_OHSOME_API_KEY` (`.env` is git-ignored; `.env.example` is
+the committed template).
 
 Stack: Bun · Vite · React 19 · TanStack Router (SPA) + Query · Zod · Tailwind ·
 react-map-gl/maplibre + OpenFreeMap · oxlint · Vitest · Playwright.
@@ -73,7 +81,8 @@ in its client-only profile.
 ## Deploy
 
 Push to `main` → GitHub Actions builds and publishes to **GitHub Pages**
-(enable once under Settings → Pages → Source: GitHub Actions). The Vite `base` is
+(enable once under Settings → Pages → Source: GitHub Actions). The build needs the repository secret
+`OHSOME_API_KEY` (Settings → Secrets and variables → Actions). The Vite `base` is
 `/osm-find-deleted-data/`; for a custom domain or user page set it to `/` in `vite.config.ts`.
 
 Thanks to [HeiGIT](https://dashboard.ohsome.org/en/) for the preprocessed OSM history data.

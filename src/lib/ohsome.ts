@@ -4,7 +4,22 @@ import type { Bbox } from './bbox'
 import { bboxToOhsomeParam } from './bbox'
 import { parseOsmId, type OsmRef } from './osm'
 
-export const OHSOME_BASE = 'https://api.ohsome.org/v1'
+/**
+ * ohsome API v2. The docs still point at `/v2-rc`, but `/v2` is the server the
+ * OpenAPI spec names and keeps working once the release candidate is promoted.
+ */
+export const OHSOME_BASE = 'https://api.heigit.org/ohsome-api/v2'
+
+/**
+ * HeiGIT API key, baked in at build time. It ends up readable in the bundle;
+ * that is a deliberate trade-off for a static SPA (see README).
+ */
+export const OHSOME_API_KEY: string | undefined = import.meta.env.VITE_OHSOME_API_KEY || undefined
+
+/** Headers for every ohsome request; v2 expects the bare key in `Authorization`. */
+export function ohsomeHeaders(accept: string): HeadersInit {
+  return OHSOME_API_KEY ? { Accept: accept, Authorization: OHSOME_API_KEY } : { Accept: accept }
+}
 
 /** The inputs that define a query (all of these also live in the URL). */
 export interface OhsomeQuery {
@@ -16,45 +31,50 @@ export interface OhsomeQuery {
   to: string
 }
 
+const dayToIso = (day: string) => `${day}T00:00:00Z`
+
 /**
- * Build the ohsome `contributions/geometry` request URL.
- * We always ask for tags + contributionTypes + metadata so we can show the
- * deletion flag, the changeset, and the object's tags.
+ * Build the ohsome `extraction/contributions.parquet` GET request URL.
+ * v2 always returns every column (tags, contribution type, changeset, user),
+ * never clips geometries, and takes the time range as `start/end`.
  */
 export function buildContributionsUrl(q: OhsomeQuery): string {
   const params = new URLSearchParams({
-    bboxes: bboxToOhsomeParam(q.bbox),
+    aoi: bboxToOhsomeParam(q.bbox),
     filter: q.filter,
-    time: `${q.from},${q.to}`,
-    properties: 'tags,contributionTypes,metadata',
-    clipGeometry: 'false',
+    time: `${dayToIso(q.from)}/${dayToIso(q.to)}`,
   })
-  return `${OHSOME_BASE}/contributions/geometry?${params.toString()}`
+  return `${OHSOME_BASE}/extraction/contributions.parquet?${params.toString()}`
 }
 
 // --- Response parsing -------------------------------------------------------
-// Properties are kept loose: ohsome adds tag keys plus @-prefixed metadata, and
-// we don't want unknown keys to fail validation.
+// The response is GeoParquet. hyparquet decodes it into one object per row,
+// with INT64 columns as bigint, timestamps as Date, MAP columns as plain
+// objects and the WKB `geom` column as a GeoJSON geometry.
 
-const ContributionFeature = z.object({
-  type: z.literal('Feature'),
-  geometry: z.unknown().nullable(),
-  properties: z.record(z.string(), z.unknown()).nullable(),
+const StringMap = z.record(z.string(), z.string())
+
+const ContributionRow = z.object({
+  osm_type: z.string(),
+  osm_id: z.bigint(),
+  edit_timestamp: z.date(),
+  version: z.number(),
+  user_name: z.string().nullish(),
+  changeset_id: z.bigint(),
+  changeset_tags: StringMap.nullish(),
+  contribution_type: z.string(),
+  tags: StringMap.nullish(),
+  tags_before: StringMap.nullish(),
+  geom: z.custom<Geometry>((v) => typeof v === 'object' && v !== null && 'type' in v).nullish(),
 })
 
-const ContributionsResponse = z.object({
-  type: z.literal('FeatureCollection'),
-  features: z.array(ContributionFeature),
-})
+export type ContributionRow = z.infer<typeof ContributionRow>
 
-export type ContributionsResponse = z.infer<typeof ContributionsResponse>
-export type ContributionFeature = z.infer<typeof ContributionFeature>
-
-/** ohsome error envelope, returned with non-2xx status. */
-const OhsomeError = z.object({
-  status: z.number().optional(),
-  message: z.string().optional(),
-})
+/** ohsome v2 error envelopes, returned with non-2xx status. */
+const OhsomeError = z.union([
+  z.object({ error: z.string() }),
+  z.object({ detail: z.union([z.string(), z.array(z.object({ msg: z.string() }))]) }),
+])
 
 export class OhsomeApiError extends Error {
   constructor(
@@ -66,25 +86,40 @@ export class OhsomeApiError extends Error {
   }
 }
 
+/** Read a non-2xx response into an `OhsomeApiError`, preferring the API's own message. */
+export async function toOhsomeApiError(res: Response): Promise<OhsomeApiError> {
+  let detail = res.statusText
+  try {
+    const body = OhsomeError.parse(await res.json())
+    if ('error' in body) detail = body.error
+    else detail = typeof body.detail === 'string' ? body.detail : body.detail.map((d) => d.msg).join('; ')
+  } catch {
+    // non-JSON or unknown error body; keep statusText
+  }
+  return new OhsomeApiError(detail || `HTTP ${res.status}`, res.status)
+}
+
+/** Decode a contributions GeoParquet file into validated rows. */
+export async function parseContributions(file: ArrayBuffer): Promise<ContributionRow[]> {
+  // Loaded on demand: the parquet reader is only needed once a query runs.
+  const [{ parquetReadObjects }, { compressors }] = await Promise.all([
+    import('hyparquet'),
+    import('hyparquet-compressors'),
+  ])
+  const rows = await parquetReadObjects({ file, compressors })
+  return z.array(ContributionRow).parse(rows)
+}
+
 export async function fetchContributions(
   q: OhsomeQuery,
   signal?: AbortSignal,
-): Promise<ContributionsResponse> {
+): Promise<ContributionRow[]> {
   const res = await fetch(buildContributionsUrl(q), {
-    headers: { Accept: 'application/json' },
+    headers: ohsomeHeaders('application/vnd.apache.parquet'),
     signal,
   })
-  if (!res.ok) {
-    let detail = res.statusText
-    try {
-      const body = OhsomeError.parse(await res.json())
-      if (body.message) detail = body.message
-    } catch {
-      // non-JSON error body; keep statusText
-    }
-    throw new OhsomeApiError(detail, res.status)
-  }
-  return ContributionsResponse.parse(await res.json())
+  if (!res.ok) throw await toOhsomeApiError(res)
+  return parseContributions(await res.arrayBuffer())
 }
 
 // --- Deletion extraction ----------------------------------------------------
@@ -93,19 +128,19 @@ export interface Deletion {
   osmId: string
   ref: OsmRef | null
   /** ISO timestamp of the deletion contribution. */
-  timestamp: string | undefined
-  changesetId: number | undefined
-  version: number | undefined
+  timestamp: string
+  changesetId: number
+  changesetComment: string | undefined
+  userName: string | undefined
+  version: number
   /** Tags from the last known state of the object (before deletion). */
   tags: Record<string, string>
-  /** Last known location, derived from a non-deletion contribution. May be absent. */
+  /** Last known geometry of the object. */
+  geometry: Geometry | undefined
+  /** Last known location, for placing a marker. */
   lon: number | undefined
   lat: number | undefined
 }
-
-const prop = (f: ContributionFeature, key: string): unknown => f.properties?.[key]
-const str = (v: unknown): string | undefined => (typeof v === 'string' ? v : undefined)
-const num = (v: unknown): number | undefined => (typeof v === 'number' ? v : undefined)
 
 /** A single representative [lon, lat] for any geometry, for placing a marker. */
 export function representativePoint(geometry: Geometry | null | undefined): [number, number] | null {
@@ -126,7 +161,7 @@ export function representativePoint(geometry: Geometry | null | undefined): [num
       if (p) coords.push(p)
     }
   } else {
-    walk((geometry as { coordinates?: unknown }).coordinates)
+    walk(geometry.coordinates)
   }
   if (coords.length === 0) return null
   let sx = 0
@@ -138,63 +173,35 @@ export function representativePoint(geometry: Geometry | null | undefined): [num
   return [sx / coords.length, sy / coords.length]
 }
 
-const nonTagKey = (k: string) => !k.startsWith('@')
-
-function tagsOf(f: ContributionFeature): Record<string, string> {
-  const out: Record<string, string> = {}
-  for (const [k, v] of Object.entries(f.properties ?? {})) {
-    if (nonTagKey(k) && typeof v === 'string') out[k] = v
-  }
-  return out
-}
+const isEmpty = (tags: Record<string, string> | null | undefined) =>
+  !tags || Object.keys(tags).length === 0
 
 /**
- * Reduce a contributions FeatureCollection to the deletions, deriving each
- * deleted object's last-known location and tags from its other contributions
- * in the same result set (deletion features themselves carry no geometry).
+ * Reduce the contributions to the deletions. In v2 a deletion row carries the
+ * object's last known geometry and tags itself, so no cross-row lookup is needed.
  */
-export function extractDeletions(fc: ContributionsResponse): Deletion[] {
-  const byId = new Map<string, ContributionFeature[]>()
-  for (const f of fc.features) {
-    const id = str(prop(f, '@osmId'))
-    if (!id) continue
-    const list = byId.get(id)
-    if (list) list.push(f)
-    else byId.set(id, [f])
-  }
-
-  const deletions: Deletion[] = []
-  for (const [osmId, features] of byId) {
-    const deletionFeatures = features.filter((f) => prop(f, '@deletion') === true)
-    if (deletionFeatures.length === 0) continue
-
-    // Latest geometry-bearing contribution → representative location.
-    const located = features
-      .filter((f) => f.geometry)
-      .sort((a, b) => (str(prop(b, '@timestamp')) ?? '').localeCompare(str(prop(a, '@timestamp')) ?? ''))
-    const point = located.length ? representativePoint(located[0]!.geometry as Geometry) : null
-
-    // Tags from the highest-version contribution that has any tags.
-    const tagged = features
-      .filter((f) => Object.keys(tagsOf(f)).length > 0)
-      .sort((a, b) => (num(prop(b, '@version')) ?? 0) - (num(prop(a, '@version')) ?? 0))
-    const tags = tagged.length ? tagsOf(tagged[0]!) : {}
-
-    for (const del of deletionFeatures) {
-      deletions.push({
+export function extractDeletions(rows: ContributionRow[]): Deletion[] {
+  const deletions = rows
+    .filter((r) => r.contribution_type === 'DELETION')
+    .map((r): Deletion => {
+      const osmId = `${r.osm_type}/${r.osm_id}`
+      const point = representativePoint(r.geom)
+      return {
         osmId,
         ref: parseOsmId(osmId),
-        timestamp: str(prop(del, '@timestamp')),
-        changesetId: num(prop(del, '@changesetId')),
-        version: num(prop(del, '@version')),
-        tags,
-        lon: point ? point[0] : undefined,
-        lat: point ? point[1] : undefined,
-      })
-    }
-  }
+        timestamp: r.edit_timestamp.toISOString(),
+        changesetId: Number(r.changeset_id),
+        changesetComment: r.changeset_tags?.comment,
+        userName: r.user_name ?? undefined,
+        version: r.version,
+        tags: (isEmpty(r.tags_before) ? r.tags : r.tags_before) ?? {},
+        geometry: r.geom ?? undefined,
+        lon: point?.[0],
+        lat: point?.[1],
+      }
+    })
 
   // Most recent deletions first.
-  deletions.sort((a, b) => (b.timestamp ?? '').localeCompare(a.timestamp ?? ''))
+  deletions.sort((a, b) => b.timestamp.localeCompare(a.timestamp))
   return deletions
 }

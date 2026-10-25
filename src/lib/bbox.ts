@@ -39,7 +39,7 @@ export function roundBbox(b: Bbox, precision = COORD_PRECISION): Bbox {
   return b.map((n) => Number(n.toFixed(precision))) as Bbox
 }
 
-/** ohsome `bboxes` value: comma-joined, fixed precision to keep URLs short and stable. */
+/** ohsome `aoi` bbox value: comma-joined, fixed precision to keep URLs short and stable. */
 export function bboxToOhsomeParam(b: Bbox, precision = COORD_PRECISION): string {
   return b.map((n) => Number(n.toFixed(precision))).join(',')
 }

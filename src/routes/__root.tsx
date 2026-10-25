@@ -21,7 +21,7 @@ function RootComponent() {
             deletions in an area, via the{' '}
             <a
               className="font-medium text-blue-600 underline"
-              href="https://api.ohsome.org"
+              href="https://docs.ohsome.org/ohsome-api/v2/"
               target="_blank"
               rel="noreferrer"
             >

@@ -1,4 +1,6 @@
 import 'maplibre-gl/dist/maplibre-gl.css'
+import { setWorkerUrl } from 'maplibre-gl'
+import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url'
 import { useEffect, useRef, useState } from 'react'
 import Map, {
   Source,
@@ -23,7 +25,11 @@ import {
   moveCorner,
 } from '../../lib/bbox'
 import type { Deletion } from '../../lib/ohsome'
-import { osmHistoryUrl, osmChangesetUrl } from '../../lib/osm'
+import { osmHistoryUrl, osmChangesetUrl, osmUserUrl } from '../../lib/osm'
+
+// MapLibre 6 loads its worker relative to its own module URL, which Vite
+// neither keeps (dev pre-bundling) nor emits (build). Point it at the asset.
+setWorkerUrl(maplibreWorkerUrl)
 
 // OpenFreeMap basemap (Maptiler is the documented fallback if this is ever down).
 const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty'
@@ -248,17 +254,29 @@ export function AreaMap({
               </div>
               <dl className="mt-1 grid grid-cols-[auto_1fr] gap-x-2">
                 <dt className="text-gray-500">Deleted</dt>
-                <dd>{(selected.timestamp ?? '').slice(0, 10) || '—'}</dd>
+                <dd>{selected.timestamp.slice(0, 10)}</dd>
                 <dt className="text-gray-500">Changeset</dt>
                 <dd>
-                  {selected.changesetId !== undefined ? (
+                  <a
+                    className="text-blue-600 underline"
+                    href={osmChangesetUrl(selected.changesetId)}
+                    target="_blank"
+                    rel="noreferrer"
+                    title={selected.changesetComment}
+                  >
+                    {selected.changesetId}
+                  </a>
+                </dd>
+                <dt className="text-gray-500">User</dt>
+                <dd>
+                  {selected.userName ? (
                     <a
                       className="text-blue-600 underline"
-                      href={osmChangesetUrl(selected.changesetId)}
+                      href={osmUserUrl(selected.userName)}
                       target="_blank"
                       rel="noreferrer"
                     >
-                      {selected.changesetId}
+                      {selected.userName}
                     </a>
                   ) : (
                     '—'

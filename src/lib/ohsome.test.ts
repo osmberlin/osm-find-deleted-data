@@ -1,16 +1,27 @@
+// @vitest-environment node
+// Node env: the parquet fixture is read from disk and decoded by hyparquet.
+/// <reference types="node" />
 import { describe, it, expect } from 'vitest'
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import {
   buildContributionsUrl,
   extractDeletions,
+  parseContributions,
   representativePoint,
-  type ContributionsResponse,
+  toOhsomeApiError,
 } from './ohsome'
-import fixture from './__fixtures__/contributions-hasenheide.json'
 
-const fc = fixture as unknown as ContributionsResponse
+const fixturePath = fileURLToPath(new URL('./__fixtures__/contributions-hasenheide.parquet', import.meta.url))
+
+/** Read the captured v2 GeoParquet response as the ArrayBuffer `fetch` would give us. */
+function readFixture(): ArrayBuffer {
+  const buf = readFileSync(fixturePath)
+  return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer
+}
 
 describe('buildContributionsUrl', () => {
-  it('encodes all required params', () => {
+  it('builds the v2 parquet extraction request', () => {
     const url = new URL(
       buildContributionsUrl({
         bbox: [13.4115, 52.4845, 13.428, 52.4905],
@@ -19,12 +30,26 @@ describe('buildContributionsUrl', () => {
         to: '2024-01-01',
       }),
     )
-    expect(url.pathname).toBe('/v1/contributions/geometry')
-    expect(url.searchParams.get('bboxes')).toBe('13.4115,52.4845,13.428,52.4905')
+    expect(url.origin + url.pathname).toBe(
+      'https://api.heigit.org/ohsome-api/v2/extraction/contributions.parquet',
+    )
+    expect(url.searchParams.get('aoi')).toBe('13.4115,52.4845,13.428,52.4905')
     expect(url.searchParams.get('filter')).toBe('amenity=bench and type:node')
-    expect(url.searchParams.get('time')).toBe('2020-01-01,2024-01-01')
-    expect(url.searchParams.get('properties')).toBe('tags,contributionTypes,metadata')
-    expect(url.searchParams.get('clipGeometry')).toBe('false')
+    expect(url.searchParams.get('time')).toBe('2020-01-01T00:00:00Z/2024-01-01T00:00:00Z')
+  })
+
+  it('does not send the v1-only parameters', () => {
+    const url = new URL(
+      buildContributionsUrl({
+        bbox: [0, 0, 1, 1],
+        filter: 'highway=primary',
+        from: '2020-01-01',
+        to: '2021-01-01',
+      }),
+    )
+    expect(url.searchParams.has('properties')).toBe(false)
+    expect(url.searchParams.has('clipGeometry')).toBe(false)
+    expect(url.searchParams.has('bboxes')).toBe(false)
   })
 })
 
@@ -50,76 +75,83 @@ describe('representativePoint', () => {
   })
 })
 
-describe('extractDeletions (real fixture)', () => {
-  const deletions = extractDeletions(fc)
-
-  it('finds exactly the deletions in the fixture', () => {
-    // Fixture is known to contain 3 deletion contributions.
-    expect(deletions.length).toBe(3)
+describe('toOhsomeApiError', () => {
+  it('uses the `error` message of a v2 error envelope', async () => {
+    const res = new Response(JSON.stringify({ error: 'aoi is too large' }), {
+      status: 400,
+      statusText: 'Bad Request',
+    })
+    const err = await toOhsomeApiError(res)
+    expect(err.name).toBe('OhsomeApiError')
+    expect(err.status).toBe(400)
+    expect(err.message).toBe('aoi is too large')
   })
 
-  it('every deletion has a parsed node ref', () => {
-    for (const d of deletions) {
-      expect(d.ref?.type).toBe('node')
-      expect(d.osmId).toMatch(/^node\/\d+$/)
-    }
+  it('joins the `msg` of a validation `detail` array', async () => {
+    const res = new Response(
+      JSON.stringify({ detail: [{ msg: 'filter is invalid' }, { msg: 'time is invalid' }] }),
+      { status: 422, statusText: 'Unprocessable Entity' },
+    )
+    const err = await toOhsomeApiError(res)
+    expect(err.status).toBe(422)
+    expect(err.message).toBe('filter is invalid; time is invalid')
   })
 
-  it('leaves location undefined when the object was created before the query window', () => {
-    // In this fixture (2018–2024) the deleted benches predate the window, so no
-    // geometry-bearing contribution is present for them. Extraction must not crash.
-    for (const d of deletions) {
-      expect(d.lon).toBeUndefined()
-      expect(d.lat).toBeUndefined()
-    }
+  it('accepts a plain string `detail`', async () => {
+    const res = new Response(JSON.stringify({ detail: 'Forbidden' }), { status: 403 })
+    const err = await toOhsomeApiError(res)
+    expect(err.status).toBe(403)
+    expect(err.message).toBe('Forbidden')
   })
 
-  it('sorts most-recent first', () => {
-    const ts = deletions.map((d) => d.timestamp ?? '')
-    expect([...ts].sort((a, b) => b.localeCompare(a))).toEqual(ts)
-  })
-
-  it('ignores objects that were only created/edited, not deleted', () => {
-    // 79 features but far fewer deletions.
-    expect(deletions.length).toBeLessThan(fc.features.length)
+  it('falls back to the status text for a non-JSON body', async () => {
+    const res = new Response('<html>gateway</html>', { status: 502, statusText: 'Bad Gateway' })
+    const err = await toOhsomeApiError(res)
+    expect(err.status).toBe(502)
+    expect(err.message).toBe('Bad Gateway')
   })
 })
 
-describe('extractDeletions (synthetic: creation in window)', () => {
-  it('derives the deleted node location from its earlier creation contribution', () => {
-    const synthetic = {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          geometry: { type: 'Point', coordinates: [13.42, 52.487] },
-          properties: {
-            '@osmId': 'node/111',
-            '@timestamp': '2021-01-01T00:00:00Z',
-            '@version': 1,
-            '@creation': true,
-            amenity: 'bench',
-          },
-        },
-        {
-          type: 'Feature',
-          geometry: null,
-          properties: {
-            '@osmId': 'node/111',
-            '@timestamp': '2022-06-01T00:00:00Z',
-            '@version': 2,
-            '@changesetId': 999,
-            '@deletion': true,
-          },
-        },
-      ],
-    } as unknown as ContributionsResponse
+describe('parseContributions + extractDeletions (real v2 fixture)', () => {
+  // Captured from the live v2 API once (72 rows, 2 DELETIONs), then reused offline.
+  it('decodes the GeoParquet rows', async () => {
+    const rows = await parseContributions(readFixture())
+    expect(rows.length).toBe(72)
+    expect(rows.filter((r) => r.contribution_type === 'DELETION').length).toBe(2)
+  })
 
-    const [d] = extractDeletions(synthetic)
-    expect(d).toBeDefined()
-    expect(d!.lon).toBe(13.42)
-    expect(d!.lat).toBe(52.487)
-    expect(d!.changesetId).toBe(999)
-    expect(d!.tags).toEqual({ amenity: 'bench' })
+  it('extracts exactly the two deletions with their metadata', async () => {
+    const deletions = extractDeletions(await parseContributions(readFixture()))
+    expect(deletions.map((d) => d.osmId).sort()).toEqual(['node/967694044', 'node/967694075'])
+
+    for (const d of deletions) {
+      expect(d.ref).toEqual(expect.objectContaining({ type: 'node' }))
+      expect(d.userName).toBe('Supaplex030')
+      expect(d.changesetId).toBe(89852551)
+      expect(d.changesetComment).toBeTypeOf('string')
+      expect(d.tags).toEqual({ amenity: 'bench' })
+      expect(d.timestamp).toMatch(/^2020-08-24T/)
+      expect(d.geometry?.type).toBe('Point')
+      expect(d.lon).toBeTypeOf('number')
+      expect(d.lat).toBeTypeOf('number')
+      // Both benches are in Berlin-Hasenheide.
+      expect(d.lon!).toBeGreaterThan(13.4)
+      expect(d.lon!).toBeLessThan(13.45)
+      expect(d.lat!).toBeGreaterThan(52.48)
+      expect(d.lat!).toBeLessThan(52.5)
+    }
+  })
+
+  it('sorts most-recent first', async () => {
+    const [row] = (await parseContributions(readFixture())).filter(
+      (r) => r.contribution_type === 'DELETION',
+    )
+    const at = (iso: string, id: bigint) => ({ ...row!, osm_id: id, edit_timestamp: new Date(iso) })
+    const deletions = extractDeletions([
+      at('2021-01-01T00:00:00Z', 1n),
+      at('2023-01-01T00:00:00Z', 2n),
+      at('2022-01-01T00:00:00Z', 3n),
+    ])
+    expect(deletions.map((d) => d.osmId)).toEqual(['node/2', 'node/3', 'node/1'])
   })
 })

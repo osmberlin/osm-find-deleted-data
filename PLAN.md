@@ -1,8 +1,8 @@
 # OSM Find Deleted Data — Plan
 
 A small **single-page web app** that finds OSM object **deletions** in an area using the
-[ohsome API](https://docs.ohsome.org/ohsome-api/v1/), replacing the manual
-"download GeoJSON → open in QGIS → filter `@deletion` → look up `@osmId`" workflow.
+[ohsome API v2](https://docs.ohsome.org/ohsome-api/v2/), replacing the manual
+"download GeoJSON → open in QGIS → filter for deletions → look up the OSM ID" workflow.
 
 Deployed as a **static SPA on GitHub Pages** — no backend required.
 
@@ -13,24 +13,25 @@ Deployed as a **static SPA on GitHub Pages** — no backend required.
 Automates this manual workflow:
 
 1. Define an **area** (bbox), a **time range**, and an **ohsome filter** (e.g. `amenity=bench and type:node`).
-2. Query the ohsome `contributions/geometry` endpoint.
-3. Keep only features where **`@deletion` is `true`**.
+2. Query the ohsome v2 `extraction/contributions.parquet` endpoint (GeoParquet, `Authorization` header with an API key).
+3. Keep only rows where **`contribution_type` is `DELETION`**.
 4. For each deletion, show the **(former) OSM ID** with a deep link to the object **history**
    (`https://www.openstreetmap.org/{type}/{id}/history`), plus map + table view.
 
 ### Reference request (from the source notes)
 
 ```
-https://api.ohsome.org/v1/contributions/geometry
-  ?bboxes=13.4115,52.4845,13.4280,52.4905        # minLon,minLat,maxLon,maxLat (Hasenheide, Berlin)
+https://api.heigit.org/ohsome-api/v2/extraction/contributions.parquet
+  ?aoi=13.4115,52.4845,13.4280,52.4905                        # minLon,minLat,maxLon,maxLat (Hasenheide, Berlin)
   &filter=amenity%3Dbench%20and%20type%3Anode
-  &time=2020-01-01,2026-02-19                     # start,end (YYYY-MM-DD); end ≤ data extent
-  &properties=tags,contributionTypes,metadata     # metadata → last editor/changeset for the table
-  &clipGeometry=false
+  &time=2020-01-01T00:00:00Z/2026-02-19T00:00:00Z             # start/end; end ≤ data extent
+# header: Authorization: <API key>
 ```
 
-Response is a GeoJSON `FeatureCollection`; deletions are features with `@deletion: true`,
-carrying `@osmId` like `node/967694075`.
+Response is GeoParquet, one row per contribution with all columns (tags, contribution type,
+changeset, user, and the object's geometry). Deletions are rows with `contribution_type` `DELETION`,
+carrying `osm_type` + `osm_id` like `node` + `967694075`, the changeset, the user, and the last known
+geometry.
 
 ---
 
@@ -52,7 +53,7 @@ carrying `@osmId` like `node/967694075`.
 | Validation     | **Zod 4** |
 | Lint/format    | **oxlint** + **oxfmt** |
 | Unit tests     | **Vitest** |
-| E2E            | **Playwright** (one smoke test) |
+| E2E            | **Playwright** (offline smoke tests) |
 | CI/Deploy      | **GitHub Actions → GitHub Pages** |
 
 > Why SPA, not TanStack Start: the ohsome API is public and CORS-enabled, so there is no
@@ -74,7 +75,7 @@ Two-pane layout:
   - Draw / resize / drag the **bbox rectangle**; this is the primary way to set the area.
   - Deletion features rendered as a `<Source>`/`<Layer>`; click → highlights the matching table row.
 - **Below / panel — Results table**
-  - Columns: OSM ID, type, last-known timestamp, **last editor** (via `properties=metadata`).
+  - Columns: OSM ID, type, last-known timestamp, **last editor** (v2 `user_name` column).
   - Each row links to the OSM **history** page in a new tab.
   - **Export** the filtered deletions as `.geojson`.
   - Loading / empty / error states from TanStack Query.
@@ -124,7 +125,7 @@ src/
   lib/
     ohsome.ts              # URL builder + fetch + response Zod types
     ohsome-metadata.ts     # data extent (for end-date validation)
-    osm.ts                 # history-link helpers, @osmId parsing
+    osm.ts                 # history-link helpers, OSM id parsing
     bbox.ts                # bbox <-> string, turf helpers
   search-schema.ts         # Zod schema for URL search params (TanStack Router validateSearch)
 .github/workflows/deploy.yml
@@ -164,7 +165,7 @@ const Search = z.object({
 4. **Map + bidirectional bbox** — `react-map-gl/maplibre` + OpenFreeMap (declarative `<Source>`/`<Layer>`,
    `<MapProvider>`/`useMap`); draggable bbox rectangle with **input↔map sync** via the shared `bbox` param;
    camera seeded from URL, written on `onMoveEnd`; deletion features as a layer.
-5. **Results** — deletion filter (`@deletion === true`), table, OSM history links, GeoJSON export; loading/empty/error states.
+5. **Results** — deletion filter (`contribution_type === 'DELETION'`), table, OSM history links, GeoJSON export; loading/empty/error states.
 6. **Robustness** — `/metadata` extent check + end-date guard; large-bbox / large-result warning.
 7. **Deploy** — GitHub Actions → Pages; Vite `base` = repo name; copy `index.html`→`404.html` for SPA routing.
 8. **E2E** — one Playwright smoke test (load → run sample query → see deletions → history link present).
@@ -176,7 +177,7 @@ const Search = z.object({
 - Static build (`vite build`) → `dist/`; deploy via official Pages Actions.
 - Set Vite `base: '/osm-find-deleted-data/'` for project pages.
 - Add `404.html` = `index.html` so client-side routes resolve on Pages.
-- ohsome API is queried **directly from the browser** (public + CORS) — no proxy, no secrets.
+- ohsome API is queried **directly from the browser** (CORS) — no proxy. The HeiGIT API key is baked into the build and therefore public (see README).
 
 ---
 
@@ -184,5 +185,5 @@ const Search = z.object({
 
 - **Filter:** free-form ohsome filter input with example syntax shown alongside it. No preset dropdown.
 - **First load:** empty form (no pre-filled example).
-- **Editor column:** included, via `properties=metadata`.
+- **Editor column:** included, via the v2 `user_name` column.
 - **Repo / Pages path:** `osm-find-deleted-data` → Vite `base: '/osm-find-deleted-data/'`.

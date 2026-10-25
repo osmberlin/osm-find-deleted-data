@@ -1,4 +1,4 @@
-/** Helpers for turning an ohsome `@osmId` into OpenStreetMap links. */
+/** Helpers for turning OSM object ids ("node/123") into OpenStreetMap links. */
 
 export type OsmType = 'node' | 'way' | 'relation'
 
@@ -9,7 +9,7 @@ export interface OsmRef {
   raw: string
 }
 
-/** Parse an ohsome `@osmId` like "node/967694075". Returns null if unrecognized. */
+/** Parse an OSM id like "node/967694075". Returns null if unrecognized. */
 export function parseOsmId(value: string | undefined | null): OsmRef | null {
   if (!value) return null
   const match = /^(node|way|relation)\/(\d+)$/.exec(value.trim())
@@ -48,4 +48,9 @@ export function osmObjectUrl(ref: OsmRef): string {
 /** Link to a changeset (shows the user who made the edit). */
 export function osmChangesetUrl(changesetId: number): string {
   return `${BASE}/changeset/${changesetId}`
+}
+
+/** Link to an OSM user profile by display name. */
+export function osmUserUrl(userName: string): string {
+  return `${BASE}/user/${encodeURIComponent(userName)}`
 }

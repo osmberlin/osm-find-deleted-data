@@ -25,5 +25,7 @@ export default defineConfig({
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
+    // A placeholder key so the app enables its query UI. ohsome is mocked in every test.
+    env: { ...process.env, VITE_OHSOME_API_KEY: 'test-key' },
   },
 })

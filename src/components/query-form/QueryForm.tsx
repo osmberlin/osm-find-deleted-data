@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import type { AppSearch } from '../../search-schema'
 import { type Bbox, isValidBbox, bboxAreaKm2, bboxToOhsomeParam } from '../../lib/bbox'
 import { buildContributionsUrl } from '../../lib/ohsome'
@@ -36,7 +36,12 @@ export function QueryForm({
   // Local string state for the four bbox fields so partial/invalid edits don't
   // wipe the URL. We push a valid bbox up as soon as all four parse.
   const [fields, setFields] = useState(() => bboxFields(search.bbox))
-  useEffect(() => setFields(bboxFields(search.bbox)), [search.bbox])
+  // Resync the fields when the URL bbox changes (adjust state during render, not in an effect).
+  const [syncedBbox, setSyncedBbox] = useState(search.bbox)
+  if (search.bbox !== syncedBbox) {
+    setSyncedBbox(search.bbox)
+    setFields(bboxFields(search.bbox))
+  }
 
   const setField = (i: 0 | 1 | 2 | 3, value: string) => {
     const next = [...fields] as [string, string, string, string]
@@ -92,7 +97,7 @@ export function QueryForm({
           Example: <code className="rounded bg-gray-100 px-1">{FILTER_EXAMPLE}</code> —{' '}
           <a
             className="text-blue-600 underline"
-            href="https://docs.ohsome.org/ohsome-api/v1/filter.html"
+            href="https://docs.ohsome.org/ohsome-api/v2/reference/filter.html"
             target="_blank"
             rel="noreferrer"
           >
@@ -258,9 +263,12 @@ const isoDay = (d: Date) => d.toISOString().slice(0, 10)
  */
 function presetRange(period: 'month' | 'year', extent: DataExtent | undefined) {
   const to = extent?.to ? new Date(`${extent.to}T00:00:00Z`) : new Date()
-  const from = new Date(to)
-  if (period === 'year') from.setUTCFullYear(from.getUTCFullYear() - 1)
-  else from.setUTCMonth(from.getUTCMonth() - 1)
+  const months = period === 'year' ? 12 : 1
+  // Clamp to the target month's last day, so Mar 31 → Feb 28/29 (not Mar 3).
+  const lastDay = new Date(Date.UTC(to.getUTCFullYear(), to.getUTCMonth() - months + 1, 0))
+  const from = new Date(
+    Date.UTC(lastDay.getUTCFullYear(), lastDay.getUTCMonth(), Math.min(to.getUTCDate(), lastDay.getUTCDate())),
+  )
   return { from: isoDay(from), to: isoDay(to) }
 }
 
@@ -269,8 +277,14 @@ function bboxFields(bbox: AppSearch['bbox']): [string, string, string, string] {
   return [numOrEmpty(b?.[0]), numOrEmpty(b?.[1]), numOrEmpty(b?.[2]), numOrEmpty(b?.[3])]
 }
 
+/**
+ * The request as a copyable curl command. The API needs the key in the
+ * `Authorization` header, so the command reads it from the shell's
+ * `$OHSOME_API_KEY` instead of putting the real key into the page.
+ */
 function GeneratedUrl({ url }: { url: string }) {
   const [copied, setCopied] = useState(false)
+  const command = `curl -H "Authorization: $OHSOME_API_KEY" -o contributions.parquet '${url}'`
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-center justify-between">
@@ -280,7 +294,7 @@ function GeneratedUrl({ url }: { url: string }) {
           className="text-xs text-blue-600 underline"
           onClick={async () => {
             try {
-              await navigator.clipboard.writeText(url)
+              await navigator.clipboard.writeText(command)
               setCopied(true)
               setTimeout(() => setCopied(false), 1500)
             } catch {
@@ -291,14 +305,22 @@ function GeneratedUrl({ url }: { url: string }) {
           {copied ? 'Copied!' : 'Copy'}
         </button>
       </div>
-      <a
-        href={url}
-        target="_blank"
-        rel="noreferrer"
-        className="block max-h-24 overflow-y-auto rounded bg-gray-50 p-2 font-mono text-[11px] break-all text-gray-700"
-      >
-        {url}
-      </a>
+      <pre className="max-h-24 overflow-y-auto rounded bg-gray-50 p-2 font-mono text-[11px] break-all whitespace-pre-wrap text-gray-700">
+        {command}
+      </pre>
+      <p className="text-xs text-gray-500">
+        Set <code className="rounded bg-gray-100 px-1">OHSOME_API_KEY</code> to your own key first
+        (free at{' '}
+        <a
+          className="text-blue-600 underline"
+          href="https://account.heigit.org/manage/key"
+          target="_blank"
+          rel="noreferrer"
+        >
+          account.heigit.org
+        </a>
+        ).
+      </p>
     </div>
   )
 }
