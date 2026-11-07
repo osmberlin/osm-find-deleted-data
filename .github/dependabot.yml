@@ -1,4 +1,4 @@
-# Dependabot policy: first Friday of the month 07:00 Europe/Berlin, one open PR per ecosystem,
+# Dependabot policy: first Thursday of the month 07:00 Europe/Berlin, one open PR per ecosystem,
 # grouped minor/patch bumps. Majors surface individually when the queue is empty.
 # Dependencies resolve from the public npm registry (see /.npmrc).
 version: 2
@@ -8,7 +8,7 @@ updates:
       - /
     schedule:
       interval: cron
-      cronjob: '0 7 * * FRI#1'
+      cronjob: '0 7 * * THU#1'
       timezone: Europe/Berlin
     cooldown:
       default-days: 5
@@ -113,7 +113,7 @@ updates:
     directory: /
     schedule:
       interval: cron
-      cronjob: '0 7 * * FRI#1'
+      cronjob: '0 7 * * THU#1'
       timezone: Europe/Berlin
     cooldown:
       default-days: 5
